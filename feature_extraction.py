@@ -11,7 +11,7 @@ def extract_features(data_array, window_size):
         Features:
             - 1st - SECONDS FROM MIDNIGHT (of the first record in the window)
             - 2nd - DAY OF THE WEEK - MON..SUN => 1..7 (of the last record in the window)
-            - 3rd - SECONDS ELAPSED (between last and first record of the window)
+            - 3rd - SECONDS ELAPSED (between the last and the first record of the window)
             - ... - SIMPLE COUNTS OF THE SENSORS
             - Last - CLASS of the feature vector - index of the activity (of the last record of the window)
     Parameters:

@@ -76,8 +76,8 @@ def __test(X, y, clf, random_state=0, activities=None):
         clf.fit(X_train, y_train)
         predict = clf.predict(X_test)
 
-        print("Report:\n", classification_report(y_test, predict, target_names=activities))
-        print("Confusion matrix:\n", confusion_matrix(y_test, predict), end="\n\n")
+        # print("Report:\n", classification_report(y_test, predict, target_names=activities))
+        # print("Confusion matrix:\n", confusion_matrix(y_test, predict), end="\n\n")
         acc_score = accuracy_score(y_test, predict)
         scores = np.append(scores, acc_score)
 

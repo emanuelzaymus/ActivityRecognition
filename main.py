@@ -26,12 +26,13 @@ def plot(feature_array, activities):
     X, y_ = SVM.__split_features(feature_array)
 
     sc = StandardScaler()
-    # sc = MaxAbsScaler()
+    # sc = RobustScaler()
     # sc = MinMaxScaler()
+    # sc = MaxAbsScaler()
     X = sc.fit_transform(X)
 
-    X_items = np.column_stack((X[:, :13], X[:, -1]))  # item sensors
-    X_motion = X[:, 13:-1]  # 13..-1 => motion sensors
+    X_items = np.column_stack((X[:, 3:13], X[:, -1]))  # 3..12 => item sensors only
+    X_motion = X[:, 13:-1]  # 13..-1 => motion sensors only
 
     """ Booling the data """
     # for x in range(X_items.shape[0]):
@@ -55,7 +56,9 @@ def plot(feature_array, activities):
     fig, ax = plt.subplots()
 
     scatter = ax.scatter(X_items, X_motion, c=y_, s=30, alpha=0.4, edgecolors=None)
+    # plt.title("Without Scaling")
     plt.title("Standard-Scaler Transforming")
+    # plt.title("Robust-Scaler Transforming")
     # plt.title("Min-Max-Scaler Transforming")
     # plt.title("Max-Abs-Scaler Transforming")
     plt.xlabel("Count of all ITEM sensors")
