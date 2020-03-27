@@ -1,0 +1,107 @@
+=====================  1. FOLD  ======================
+Report:
+               precision    recall  f1-score   support
+
+       Clean       0.99      0.99      0.99       328
+        Cook       0.98      0.99      0.98       426
+         Eat       0.96      0.96      0.96       186
+  Phone_Call       0.97      0.99      0.98       235
+  Wash_hands       0.96      0.90      0.93       105
+
+    accuracy                           0.98      1280
+   macro avg       0.97      0.96      0.97      1280
+weighted avg       0.98      0.98      0.98      1280
+
+Confusion matrix:
+ [[324   0   4   0   0]
+ [  0 420   4   0   2]
+ [  4   4 178   0   0]
+ [  0   0   0 233   2]
+ [  0   4   0   7  94]]
+
+=====================  2. FOLD  ======================
+Report:
+               precision    recall  f1-score   support
+
+       Clean       0.98      0.99      0.98       336
+        Cook       1.00      0.98      0.99       450
+         Eat       0.95      0.96      0.96       194
+  Phone_Call       0.99      0.98      0.99       209
+  Wash_hands       0.94      0.98      0.96        90
+
+    accuracy                           0.98      1279
+   macro avg       0.97      0.98      0.97      1279
+weighted avg       0.98      0.98      0.98      1279
+
+Confusion matrix:
+ [[331   0   5   0   0]
+ [  0 443   4   0   3]
+ [  6   2 186   0   0]
+ [  1   0   0 205   3]
+ [  0   0   0   2  88]]
+
+=====================  3. FOLD  ======================
+Report:
+               precision    recall  f1-score   support
+
+       Clean       0.99      0.99      0.99       340
+        Cook       0.99      0.98      0.98       454
+         Eat       0.98      0.97      0.97       171
+  Phone_Call       0.98      0.98      0.98       207
+  Wash_hands       0.91      0.95      0.93       107
+
+    accuracy                           0.98      1279
+   macro avg       0.97      0.98      0.97      1279
+weighted avg       0.98      0.98      0.98      1279
+
+Confusion matrix:
+ [[338   1   1   0   0]
+ [  0 444   3   1   6]
+ [  3   2 166   0   0]
+ [  0   0   0 203   4]
+ [  0   1   0   4 102]]
+
+=====================  4. FOLD  ======================
+Report:
+               precision    recall  f1-score   support
+
+       Clean       0.98      0.99      0.99       312
+        Cook       0.97      0.99      0.98       456
+         Eat       0.98      0.92      0.95       185
+  Phone_Call       0.97      0.97      0.97       205
+  Wash_hands       0.94      0.93      0.93       121
+
+    accuracy                           0.97      1279
+   macro avg       0.97      0.96      0.96      1279
+weighted avg       0.97      0.97      0.97      1279
+
+Confusion matrix:
+ [[308   2   2   0   0]
+ [  0 453   1   0   2]
+ [  4  11 170   0   0]
+ [  1   0   0 199   5]
+ [  0   3   0   6 112]]
+
+=====================  5. FOLD  ======================
+Report:
+               precision    recall  f1-score   support
+
+       Clean       0.98      1.00      0.99       337
+        Cook       0.98      0.99      0.98       464
+         Eat       0.97      0.94      0.96       199
+  Phone_Call       0.98      0.99      0.99       185
+  Wash_hands       0.97      0.94      0.95        94
+
+    accuracy                           0.98      1279
+   macro avg       0.98      0.97      0.97      1279
+weighted avg       0.98      0.98      0.98      1279
+
+Confusion matrix:
+ [[336   0   1   0   0]
+ [  0 458   4   0   2]
+ [  6   5 188   0   0]
+ [  0   0   0 184   1]
+ [  0   3   0   3  88]]
+
+
+TOTAL accuracy score: 97.73298231039874
