@@ -1,3 +1,5 @@
+from typing import List
+
 import numpy as np
 import pandas as pd
 import matplotlib.pyplot as plt
@@ -7,22 +9,23 @@ import feature_extraction as fex
 import SVM
 
 
-def test_variable_window_sizes(data, window_sizes=(5, 7, 10, 13, 15, 17, 20, 23, 25, 27, 30, 33, 35, 37, 40)):
-    file_to_save = np.zeros((len(window_sizes), 2))
+def test_variable_window_sizes(data: np.ndarray,
+                               window_sizes: List = (5, 7, 10, 13, 15, 17, 20, 23, 25, 27, 30, 33, 35, 37, 40)):
+    file_to_save: np.ndarray = np.zeros((len(window_sizes), 2))
 
     for i in range(len(window_sizes)):
         print("Window size:", window_sizes[i])
         file_to_save[i, 0] = window_sizes[i]
         features, activities = fex.extract_features(data, window_sizes[i])
 
-        accuracy = SVM.test_default_SVC(features)
+        accuracy: float = SVM.test_default_SVC(features)
         print("Accuracy:", accuracy, '\n')
         file_to_save[i, 1] = accuracy
 
-    np.savetxt("window_size_testing.txt", file_to_save, delimiter='\t', fmt="%.4f")
+    np.savetxt("results/window_size_testing.txt", file_to_save, delimiter='\t', fmt="%.4f")
 
 
-def plot(feature_array, activities):
+def plot(feature_array: np.ndarray, activities: np.ndarray):
     X, y_ = SVM.__split_features(feature_array)
 
     sc = StandardScaler()
@@ -31,8 +34,8 @@ def plot(feature_array, activities):
     # sc = MaxAbsScaler()
     X = sc.fit_transform(X)
 
-    X_items = np.column_stack((X[:, 3:13], X[:, -1]))  # 3..12 => item sensors only
-    X_motion = X[:, 13:-1]  # 13..-1 => motion sensors only
+    X_items: np.ndarray = np.column_stack((X[:, 3:13], X[:, -1]))  # 3..12 => item sensors only
+    X_motion: np.ndarray = X[:, 13:-1]  # 13..-1 => motion sensors only
 
     """ Booling the data """
     # for x in range(X_items.shape[0]):
@@ -67,22 +70,34 @@ def plot(feature_array, activities):
     plt.show()
 
 
-# data = fh.get_data_array("data_kyoto_1.txt")
+# data: np.ndarray = fh.get_data_array("data/data_kyoto_1.txt")
+#
 # test_variable_window_sizes(data)
-
+#
 # features, activities = fex.extract_features(data, window_size=30)
-# np.savetxt("adlnormal_features_ws30.txt", features, delimiter='\t', fmt="%d")
-# np.savetxt("activities.txt", activities, delimiter='\t', fmt="%s")
-
-features = pd.read_table("adlnormal_features_ws30.txt", header=None).values
-activities = pd.read_csv("activities.txt", delimiter='\t', header=None).values.flatten()
-
+# np.savetxt("data/adlnormal_features_ws30.txt", features, delimiter='\t', fmt="%d")
+# np.savetxt("data/activities.txt", activities, delimiter='\t', fmt="%s")
+#
+features = pd.read_table("features/adlnormal_features_ws30.txt", header=None).values
+activities = pd.read_csv("features/activities.txt", delimiter='\t', header=None).values.flatten()
+#
 # SVM.test_kernels(features)
-
+#
 # SVM.test_c_gamma_default_parameters(features)
-
+#
 # SVM.test_c_gamma_parameters(features)
-
+#
 SVM.test_best_SVC(features, activities)
-
+#
 # plot(features, activities)
+
+# --------------------------------------------
+
+# data = fh.get_data_array("data/data_aruba_formatted_5days.txt", '\t')
+# print(data)
+#
+# features, activities = fex.extract_features(data, window_size=30)
+# print(features)
+# print(activities)
+#
+# SVM.test_best_SVC(features, activities)

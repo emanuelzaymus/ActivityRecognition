@@ -1,10 +1,13 @@
+from datetime import datetime
+from typing import Tuple
+
 import numpy as np
 from DataArray import DataArray
 
 ANOTHER_FEATURES_COUNT = 3  # 3 for features: SECONDS FROM MIDNIGHT, DAY OF THE WEEK, SECONDS ELAPSED
 
 
-def extract_features(data_array, window_size):
+def extract_features(data_array: np.ndarray, window_size: int) -> Tuple[np.ndarray, np.ndarray]:
     """
         Extracts feature vectors from ``data_array`` based on windowing with ``window_size``.
 
@@ -24,27 +27,28 @@ def extract_features(data_array, window_size):
         activities : ndarray
             Used activities in its order (indices of the activities are theirs positions in the array)
     """
-    data = data_array.copy()
-    activities = __fill_missing_activities(data)
-    sensors = __get_sensors(data)
-    n_f_vectors = data.shape[0] - window_size + 1  # number of rows - window_size + 1
-    n_features = sensors.size + ANOTHER_FEATURES_COUNT + 1  # + 1 for CLASS
+    data: np.ndarray = data_array.copy()
+    activities: np.ndarray = __fill_missing_activities(data)
+    sensors: np.ndarray = __get_sensors(data)
+    n_f_vectors: int = data.shape[0] - window_size + 1  # number of rows - window_size + 1
+    n_features: int = sensors.size + ANOTHER_FEATURES_COUNT + 1  # + 1 for CLASS
 
-    features = np.zeros((n_f_vectors, n_features), dtype=int)
+    features: np.ndarray = np.zeros((n_f_vectors, n_features), dtype=int)
 
     for x in range(n_f_vectors):
-        window = data[x:x + window_size]
+        window: np.ndarray = data[x:x + window_size]
         __fill_feature_vector_using_record_window(features[x], window, sensors)
 
     return features, activities
 
 
-def __fill_feature_vector_using_record_window(feature_vector, record_window, sensors):
+def __fill_feature_vector_using_record_window(feature_vector: np.ndarray, record_window: np.ndarray,
+                                              sensors: np.ndarray) -> np.ndarray:
     """
     Fills the whole ``feature_vector`` with collected data from ``record_window``.
     """
-    datetime_first = record_window[0, DataArray.DATETIME]
-    datetime_last = record_window[-1, DataArray.DATETIME]
+    datetime_first: datetime = record_window[0, DataArray.DATETIME]
+    datetime_last: datetime = record_window[-1, DataArray.DATETIME]
     # fill SECONDS FROM MIDNIGHT
     feature_vector[0] = (datetime_first - datetime_first.replace(hour=0, minute=0, second=0)).total_seconds()
 
@@ -55,7 +59,7 @@ def __fill_feature_vector_using_record_window(feature_vector, record_window, sen
     feature_vector[2] = (datetime_last - datetime_first).total_seconds()
 
     # fill SIMPLE SENSOR COUNTS
-    window_sensors = record_window[:, DataArray.SENSOR]
+    window_sensors: np.ndarray = record_window[:, DataArray.SENSOR]
     unique, counts = np.unique(window_sensors, return_counts=True)
     for i in range(unique.size):
         index = np.where(sensors == unique[i])
@@ -67,31 +71,27 @@ def __fill_feature_vector_using_record_window(feature_vector, record_window, sen
     return feature_vector
 
 
-def __get_sensors(data_array):
-    """
-    Returns:
-        ndarray: Used sensors
-    """
+def __get_sensors(data_array: np.ndarray) -> np.ndarray:
     return np.unique(data_array[:, DataArray.SENSOR])
 
 
-def __fill_missing_activities(data_array):
+def __fill_missing_activities(data_array: np.ndarray) -> np.ndarray:
     """
     Fills and replaces ACTIVITY values with NUMBER (index) OF THE ACTIVITY in the parameter ``data_array``.
 
     Returns:
         ndarray: Used activities in its order
     """
-    all_activities = __get_activities(data_array)
+    all_activities: np.ndarray = __get_activities(data_array)
     last_activities_stack = []
     contains_nothing_bool = False
 
     for record in data_array:
-        curr_act = record[DataArray.ACTIVITY]
+        curr_act: str = record[DataArray.ACTIVITY]
 
         if curr_act != DataArray.NO_ACTIVITY:
             curr_act, curr_act_state = curr_act.strip().split()
-            curr_act_index = np.where(all_activities == curr_act)[0][0]  # activity index
+            curr_act_index: int = np.where(all_activities == curr_act)[0][0]  # activity index
             record[DataArray.ACTIVITY] = curr_act_index  # set current activity index
 
             if curr_act_state.lower() in (DataArray.BEGIN, DataArray.START):
@@ -110,15 +110,11 @@ def __fill_missing_activities(data_array):
     return all_activities
 
 
-def __get_activities(data_array):
-    """
-    Returns:
-        ndarray: Used activities
-    """
-    unique_activities = np.unique(data_array[:, DataArray.ACTIVITY])
+def __get_activities(data_array: np.ndarray) -> np.ndarray:
+    unique_activities: np.ndarray = np.unique(data_array[:, DataArray.ACTIVITY])
 
     for i in range(unique_activities.size):
         unique_activities[i] = unique_activities[i].split()[0]
 
-    unique_activities = np.unique(unique_activities)
+    unique_activities: np.ndarray = np.unique(unique_activities)
     return unique_activities[unique_activities != DataArray.NO_ACTIVITY]

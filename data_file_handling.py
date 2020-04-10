@@ -14,7 +14,7 @@ class _RawFileColumns:
     # ACTIVITY = 4
 
 
-def get_data_array(file_name, delimiter=None):
+def get_data_array(file_name: str, delimiter: str = None) -> np.ndarray:
     """
         Loads and converts data from file.
 
@@ -34,21 +34,22 @@ def get_data_array(file_name, delimiter=None):
     Returns:
         ndarray: Loaded and converted data from file
     """
-    data = pd.read_table(file_name, delimiter=delimiter, header=None, names=range(_RawFileColumns.NUMBER_OF_COLUMNS),
-                         index_col=False)
-    data = data.fillna(DataArray.NO_ACTIVITY).values
+    data: pd.DataFrame = pd.read_table(file_name, delimiter=delimiter, header=None,
+                                       names=range(_RawFileColumns.NUMBER_OF_COLUMNS),
+                                       index_col=False)
+    data: np.ndarray = data.fillna(DataArray.NO_ACTIVITY).values
     __convert_to_datetime(data)
     return __delete_unnecessary_columns(data)
 
 
-def __convert_to_datetime(data):
+def __convert_to_datetime(data: np.ndarray):
     for row in data:
-        date = row[_RawFileColumns.DATE].strip()
-        time = row[_RawFileColumns.TIME].strip()
+        date: str = row[_RawFileColumns.DATE].strip()
+        time: str = row[_RawFileColumns.TIME].strip()
 
-        datetime_object = datetime.strptime(date + ' ' + time[:8], '%Y-%m-%d %H:%M:%S')
+        datetime_object: datetime = datetime.strptime(date + ' ' + time[:8], '%Y-%m-%d %H:%M:%S')
         row[DataArray.DATETIME] = datetime_object
 
 
-def __delete_unnecessary_columns(data):
+def __delete_unnecessary_columns(data: np.ndarray) -> np.ndarray:
     return np.delete(data, [_RawFileColumns.TIME, _RawFileColumns.VALUE], 1)
