@@ -1,10 +1,28 @@
 from datetime import datetime
 from typing import Tuple
-
 import numpy as np
 from DataArray import DataArray
 
 ANOTHER_FEATURES_COUNT = 3  # 3 for features: SECONDS FROM MIDNIGHT, DAY OF THE WEEK, SECONDS ELAPSED
+
+
+def extract_features_with_previous_class_feature(data_array: np.ndarray, window_size: int) -> Tuple[
+    np.ndarray, np.ndarray]:
+    features, activities = extract_features(data_array, window_size)
+
+    feature_vectors: np.ndarray = features[:, :-1]
+    classes: np.ndarray = features[:, -1]
+
+    prev_classes = np.zeros((feature_vectors.shape[0], 1), dtype=int)
+    feature_vectors = np.column_stack((feature_vectors, prev_classes))
+
+    feature_vectors[0, -1] = classes[0]
+    for i in range(1, classes.shape[0]):
+        feature_vectors[i, -1] = classes[i - 1]
+
+    features = np.column_stack((feature_vectors, classes))
+
+    return features, activities
 
 
 def extract_features(data_array: np.ndarray, window_size: int) -> Tuple[np.ndarray, np.ndarray]:

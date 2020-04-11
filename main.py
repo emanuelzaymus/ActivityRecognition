@@ -4,9 +4,12 @@ import numpy as np
 import pandas as pd
 import matplotlib.pyplot as plt
 from sklearn.preprocessing import StandardScaler, RobustScaler, MaxAbsScaler, MinMaxScaler
+
+import NB
 import data_file_handling as fh
 import feature_extraction as fex
 import SVM
+import classifier
 
 
 def test_variable_window_sizes(data: np.ndarray,
@@ -26,7 +29,7 @@ def test_variable_window_sizes(data: np.ndarray,
 
 
 def plot(feature_array: np.ndarray, activities: np.ndarray):
-    X, y_ = SVM.__split_features(feature_array)
+    X, y_ = classifier.split_features(feature_array)
 
     sc = StandardScaler()
     # sc = RobustScaler()
@@ -70,16 +73,17 @@ def plot(feature_array: np.ndarray, activities: np.ndarray):
     plt.show()
 
 
-# data: np.ndarray = fh.get_data_array("data/data_kyoto_1.txt")
+data: np.ndarray = fh.get_data_array("data/data_kyoto_1_ordered.txt")
 #
 # test_variable_window_sizes(data)
 #
-# features, activities = fex.extract_features(data, window_size=30)
+features, activities = fex.extract_features(data, window_size=30)
+# features, activities = fex.extract_features_with_previous_class_feature(data, window_size=30)
 # np.savetxt("data/adlnormal_features_ws30.txt", features, delimiter='\t', fmt="%d")
 # np.savetxt("data/activities.txt", activities, delimiter='\t', fmt="%s")
 #
-features = pd.read_table("features/adlnormal_features_ws30.txt", header=None).values
-activities = pd.read_csv("features/activities.txt", delimiter='\t', header=None).values.flatten()
+# features = pd.read_table("features/adlnormal_features_ws30.txt", header=None).values
+# activities = pd.read_csv("features/activities.txt", delimiter='\t', header=None).values.flatten()
 #
 # SVM.test_kernels(features)
 #
@@ -87,17 +91,13 @@ activities = pd.read_csv("features/activities.txt", delimiter='\t', header=None)
 #
 # SVM.test_c_gamma_parameters(features)
 #
-SVM.test_best_SVC(features, activities)
+# print(features, activities)
+# SVM.test_best_SVC_with_PCF(features, activities)
 #
 # plot(features, activities)
 
 # --------------------------------------------
 
-# data = fh.get_data_array("data/data_aruba_formatted_5days.txt", '\t')
-# print(data)
-#
-# features, activities = fex.extract_features(data, window_size=30)
-# print(features)
-# print(activities)
-#
-# SVM.test_best_SVC(features, activities)
+print(features[features < 0])
+
+NB.test_CategoricalNB(features, activities)
