@@ -8,38 +8,23 @@ from src.DataArray import DataArray
 ANOTHER_FEATURES_COUNT = 3  # 3 for features: SECONDS FROM MIDNIGHT, DAY OF THE WEEK, SECONDS ELAPSED
 
 
-def extract_features_from_arrays(data_arrays: list, window_size: int, sensors: list = None) -> np.ndarray:
+def extract_features_from_arrays(data_arrays: list, window_size: int, sensors: list = None,
+                                 with_previous_class_feature: bool = False) -> np.ndarray:
     result_data_array = None
 
     data_arr: np.ndarray
     for data_arr in data_arrays:
         data, a = extract_features(data_arr, window_size, all_samples_labeled=True, sensors=np.array(sensors))
+        if with_previous_class_feature:
+            data = __add_previous_class_feature(data)
         result_data_array = data if result_data_array is None else np.append(result_data_array, data, axis=0)
 
     return result_data_array
 
 
-def extract_features_with_previous_class_feature(data_array: np.ndarray, window_size: int) -> Tuple[
-    np.ndarray, np.ndarray]:
-    features, activities = extract_features(data_array, window_size)
-
-    feature_vectors: np.ndarray = features[:, :-1]
-    classes: np.ndarray = features[:, -1]
-
-    prev_classes = np.zeros((feature_vectors.shape[0], 1), dtype=int)
-    feature_vectors = np.column_stack((feature_vectors, prev_classes))
-
-    feature_vectors[0, -1] = classes[0]
-    for i in range(1, classes.shape[0]):
-        feature_vectors[i, -1] = classes[i - 1]
-
-    features = np.column_stack((feature_vectors, classes))
-
-    return features, activities
-
-
 def extract_features(data_array: np.ndarray, window_size: int, all_samples_labeled: bool = False,
-                     sensors: np.ndarray = None) -> Tuple[np.ndarray, np.ndarray]:
+                     sensors: np.ndarray = None, with_previous_class_feature: bool = False) \
+        -> Tuple[np.ndarray, np.ndarray]:
     """
         Extracts feature vectors from ``data_array`` based on windowing with ``window_size``.
 
@@ -49,13 +34,14 @@ def extract_features(data_array: np.ndarray, window_size: int, all_samples_label
             - 3rd - SECONDS ELAPSED (between the last and the first record of the window)
             - ... - SIMPLE COUNTS OF THE SENSORS
             - Last - CLASS of the feature vector - index of the activity (of the last record of the window)
-    Parameters:
-        data_array (ndarray): Numpy array in format [[datetime.datetime  SENSOR  ACTIVITY] ... ]
+
+        :param data_array: Numpy array in format [[datetime.datetime  SENSOR  ACTIVITY] ... ]
                 -> result of data_file_handling.get_data_array(file_name)
-        window_size (int): Size of the window
-        all_samples_labeled (bool): If all samples are labeled with its numerical value of activity.
-        sensors (ndarray): Names of sensors (optional).
-    Returns
+        :param window_size: Size of the window
+        :param all_samples_labeled: If all samples are labeled with its numerical value of activity.
+        :param sensors: Names of sensors (optional).
+        :param with_previous_class_feature:
+    Returns:
         features : ndarray
             Feature vectors with class of the feature vector - last element of the vector
         activities : ndarray
@@ -76,6 +62,9 @@ def extract_features(data_array: np.ndarray, window_size: int, all_samples_label
     for x in range(n_f_vectors):
         window: np.ndarray = data[x:x + window_size]
         __fill_feature_vector_using_record_window(features[x], window, sensors)
+
+    if with_previous_class_feature:
+        features = __add_previous_class_feature(features)
 
     return features, activities
 
@@ -156,3 +145,18 @@ def __get_activities(data_array: np.ndarray) -> np.ndarray:
 
     unique_activities: np.ndarray = np.unique(unique_activities)
     return unique_activities[unique_activities != DataArray.NO_ACTIVITY]
+
+
+def __add_previous_class_feature(features: np.ndarray) -> np.ndarray:
+    feature_vectors: np.ndarray = features[:, :-1]
+    classes: np.ndarray = features[:, -1]
+
+    prev_classes = np.zeros((feature_vectors.shape[0], 1), dtype=int)
+    feature_vectors = np.column_stack((feature_vectors, prev_classes))
+
+    feature_vectors[0, -1] = classes[0]
+    for i in range(1, classes.shape[0]):
+        feature_vectors[i, -1] = classes[i - 1]
+
+    features = np.column_stack((feature_vectors, classes))
+    return features

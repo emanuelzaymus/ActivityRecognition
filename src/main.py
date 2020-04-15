@@ -71,32 +71,26 @@ def plot(feature_array: np.ndarray, activities: np.ndarray):
     plt.show()
 
 
-# data: np.ndarray = fh.get_data_array("data/data_kyoto_1_ordered.txt")
-#
+dataset: Dataset = Kyoto1()
+data_arrays: list = fh.get_data_arrays_from_directory(dataset)
+
 # test_variable_window_sizes(data)
-#
+
 # features, activities = fex.extract_features(data, window_size=30)
-# features, activities = fex.extract_features_with_previous_class_feature(data, window_size=30)
+features = fex.extract_features_from_arrays(data_arrays, 30, dataset.sensors, with_previous_class_feature=False)
 # np.savetxt("data/adlnormal_features_ws30.txt", features, delimiter='\t', fmt="%d")
 # np.savetxt("data/activities.txt", activities, delimiter='\t', fmt="%s")
-#
+
 # features = pd.read_table("features/adlnormal_features_ws30.txt", header=None).values
 # activities = pd.read_csv("features/activities.txt", delimiter='\t', header=None).values.flatten()
-#
+
 # SVM.test_kernels(features)
-#
+
 # SVM.test_c_gamma_default_parameters(features)
-#
+
 # SVM.test_c_gamma_parameters(features)
-#
-# print(features, activities)
-# SVM.test_best_SVC_with_PCF(features, activities)
-#
+
+print(features)
+SVM.test_best_SVC(features, dataset.activities)
+
 # plot(features, activities)
-
-dataset: Dataset = Kyoto1()
-kyoto1_file_datasets = fh.get_data_arrays_from_directory(dataset)
-data = fex.extract_features_from_arrays(kyoto1_file_datasets, 30, dataset.sensors)
-print(data)
-
-SVM.test_best_SVC(data, dataset.activities)

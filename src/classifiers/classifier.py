@@ -1,3 +1,4 @@
+import statistics
 from typing import Tuple
 
 import numpy as np
@@ -14,7 +15,7 @@ def __split_features(features: np.ndarray) -> Tuple[np.ndarray, np.ndarray]:
 
 def test(features: np.ndarray, clf, random_state: int = 0, activities: np.ndarray = None, scale: bool = True) -> float:
     X, y = __split_features(features)
-    scores: np.ndarray = np.array([])
+    scores = []
 
     kf = KFold(n_splits=5, shuffle=True, random_state=random_state)
     for train_index, test_index in kf.split(X):
@@ -32,14 +33,14 @@ def test(features: np.ndarray, clf, random_state: int = 0, activities: np.ndarra
         # print("Report:\n", classification_report(y_test, predict, target_names=activities))
         # print("Confusion matrix:\n", confusion_matrix(y_test, predict), end="\n\n")
         acc_score = accuracy_score(y_test, predict)
-        scores = np.append(scores, acc_score)
+        scores.append(acc_score)
 
-    return np.mean(scores) * 100
+    return statistics.mean(scores) * 100
 
 
 def test_with_previous_class_feature(features: np.ndarray, clf, activities: np.ndarray = None) -> float:
     X, y = __split_features(features)
-    scores_overall: np.ndarray = np.array([])
+    scores_overall = []
 
     kf = KFold(n_splits=5, shuffle=False)
     for train_index, test_index in kf.split(X):
@@ -72,7 +73,7 @@ def test_with_previous_class_feature(features: np.ndarray, clf, activities: np.n
         # print("Report:\n", classification_report(y_test, predict, target_names=activities))
         # print("Confusion matrix:\n", confusion_matrix(y_test, predict), end="\n\n")
         acc_score = accuracy_score(y_test, predictions_fold)
-        scores_overall = np.append(scores_overall, acc_score)
+        scores_overall.append(acc_score)
         print("score fold:", acc_score)
 
-    return np.mean(scores_overall) * 100
+    return statistics.mean(scores_overall) * 100
