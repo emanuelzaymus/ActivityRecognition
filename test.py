@@ -45,3 +45,16 @@ from sklearn.preprocessing import StandardScaler
 #     sss = 654223
 #
 # print(sss)
+import data_file_handling
+import feature_extraction
+from datasets.Dataset import Dataset
+from datasets.Kyoto1 import Kyoto1
+
+# data = data_file_handling.get_data_array("data/data_kyoto_1.txt")
+# print(feature_extraction.__get_sensors(data))
+
+kyoto_: Dataset = Kyoto1()
+print(kyoto_.directory)
+
+print(kyoto_.directory)
+# print(type(kyoto_.get_sensors)

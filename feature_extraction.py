@@ -1,9 +1,22 @@
 from datetime import datetime
 from typing import Tuple
+
 import numpy as np
+
 from DataArray import DataArray
 
 ANOTHER_FEATURES_COUNT = 3  # 3 for features: SECONDS FROM MIDNIGHT, DAY OF THE WEEK, SECONDS ELAPSED
+
+
+def extract_features_from_arrays(data_arrays: list, window_size: int, sensors: list = None) -> np.ndarray:
+    result_data_array = None
+
+    data_arr: np.ndarray
+    for data_arr in data_arrays:
+        data, a = extract_features(data_arr, window_size, all_samples_labeled=True, sensors=np.array(sensors))
+        result_data_array = data if result_data_array is None else np.append(result_data_array, data, axis=0)
+
+    return result_data_array
 
 
 def extract_features_with_previous_class_feature(data_array: np.ndarray, window_size: int) -> Tuple[
@@ -25,7 +38,8 @@ def extract_features_with_previous_class_feature(data_array: np.ndarray, window_
     return features, activities
 
 
-def extract_features(data_array: np.ndarray, window_size: int) -> Tuple[np.ndarray, np.ndarray]:
+def extract_features(data_array: np.ndarray, window_size: int, all_samples_labeled: bool = False,
+                     sensors: np.ndarray = None) -> Tuple[np.ndarray, np.ndarray]:
     """
         Extracts feature vectors from ``data_array`` based on windowing with ``window_size``.
 
@@ -39,6 +53,8 @@ def extract_features(data_array: np.ndarray, window_size: int) -> Tuple[np.ndarr
         data_array (ndarray): Numpy array in format [[datetime.datetime  SENSOR  ACTIVITY] ... ]
                 -> result of data_file_handling.get_data_array(file_name)
         window_size (int): Size of the window
+        all_samples_labeled (bool): If all samples are labeled with its numerical value of activity.
+        sensors (ndarray): Names of sensors (optional).
     Returns
         features : ndarray
             Feature vectors with class of the feature vector - last element of the vector
@@ -46,10 +62,14 @@ def extract_features(data_array: np.ndarray, window_size: int) -> Tuple[np.ndarr
             Used activities in its order (indices of the activities are theirs positions in the array)
     """
     data: np.ndarray = data_array.copy()
-    activities: np.ndarray = __fill_missing_activities(data)
-    sensors: np.ndarray = __get_sensors(data)
+    activities: np.ndarray = __fill_missing_activities(data) if not all_samples_labeled else None
+    if sensors is None:
+        sensors = __get_sensors(data)
     n_f_vectors: int = data.shape[0] - window_size + 1  # number of rows - window_size + 1
     n_features: int = sensors.size + ANOTHER_FEATURES_COUNT + 1  # + 1 for CLASS
+
+    if not n_f_vectors > 0:
+        exit('Window size %s is too large. Number of feature vectors = %d' % (window_size, n_f_vectors))
 
     features: np.ndarray = np.zeros((n_f_vectors, n_features), dtype=int)
 

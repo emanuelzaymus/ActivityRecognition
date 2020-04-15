@@ -1,7 +1,11 @@
+import os
 from datetime import datetime
+
 import numpy as np
 import pandas as pd
+
 from DataArray import DataArray
+from datasets.Dataset import Dataset
 
 
 class _RawFileColumns:
@@ -12,6 +16,24 @@ class _RawFileColumns:
     # SENSOR = 2
     VALUE = 3
     # ACTIVITY = 4
+
+
+def get_data_arrays_from_directory(dataset: Dataset, delimiter: str = None) -> list:
+    ret_data_list = []
+
+    for file in dataset.files:
+        one_recording: np.ndarray = None
+        for i in range(len(dataset.extensions_activities)):
+            current_file_path = os.path.join(dataset.directory, file + dataset.extensions[i])
+
+            data = get_data_array(current_file_path, delimiter)
+            data[:, DataArray.ACTIVITY] = dataset.extensions_activities[i]
+
+            one_recording = data if i == 0 else np.append(one_recording, data, axis=0)
+
+        ret_data_list.append(one_recording)
+
+    return ret_data_list
 
 
 def get_data_array(file_name: str, delimiter: str = None) -> np.ndarray:

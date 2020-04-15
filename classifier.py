@@ -1,7 +1,7 @@
 from typing import Tuple
 
 import numpy as np
-from sklearn.metrics import accuracy_score
+from sklearn.metrics import accuracy_score, classification_report, confusion_matrix
 from sklearn.model_selection import KFold
 from sklearn.preprocessing import StandardScaler
 
@@ -47,7 +47,6 @@ def test_with_previous_class_feature(features: np.ndarray, clf, activities: np.n
         y_train, y_test = y[train_index], y[test_index]
 
         sc = StandardScaler()
-        sc.fit(X_train)
         X_train = sc.fit_transform(X_train)
         clf.fit(X_train, y_train)
 

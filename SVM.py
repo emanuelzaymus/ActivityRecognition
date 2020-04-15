@@ -1,5 +1,5 @@
 import numpy as np
-from sklearn.svm import SVC, LinearSVC
+from sklearn.svm import SVC
 from typing import List
 import classifier
 

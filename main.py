@@ -1,15 +1,16 @@
 from typing import List
 
+import matplotlib.pyplot as plt
 import numpy as np
 import pandas as pd
-import matplotlib.pyplot as plt
-from sklearn.preprocessing import StandardScaler, RobustScaler, MaxAbsScaler, MinMaxScaler
+from sklearn.preprocessing import StandardScaler
 
-import NB
-import data_file_handling as fh
-import feature_extraction as fex
 import SVM
 import classifier
+import data_file_handling as fh
+import feature_extraction as fex
+from datasets.Dataset import Dataset
+from datasets.Kyoto1 import Kyoto1
 
 
 def test_variable_window_sizes(data: np.ndarray,
@@ -73,11 +74,11 @@ def plot(feature_array: np.ndarray, activities: np.ndarray):
     plt.show()
 
 
-data: np.ndarray = fh.get_data_array("data/data_kyoto_1_ordered.txt")
+# data: np.ndarray = fh.get_data_array("data/data_kyoto_1_ordered.txt")
 #
 # test_variable_window_sizes(data)
 #
-features, activities = fex.extract_features(data, window_size=30)
+# features, activities = fex.extract_features(data, window_size=30)
 # features, activities = fex.extract_features_with_previous_class_feature(data, window_size=30)
 # np.savetxt("data/adlnormal_features_ws30.txt", features, delimiter='\t', fmt="%d")
 # np.savetxt("data/activities.txt", activities, delimiter='\t', fmt="%s")
@@ -96,8 +97,9 @@ features, activities = fex.extract_features(data, window_size=30)
 #
 # plot(features, activities)
 
-# --------------------------------------------
+dataset: Dataset = Kyoto1()
+kyoto1_file_datasets = fh.get_data_arrays_from_directory(dataset)
+data = fex.extract_features_from_arrays(kyoto1_file_datasets, 30, dataset.sensors)
+print(data)
 
-print(features[features < 0])
-
-NB.test_CategoricalNB(features, activities)
+SVM.test_best_SVC(data, dataset.activities)
