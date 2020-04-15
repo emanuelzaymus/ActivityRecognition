@@ -1,4 +1,4 @@
-from datasets.Dataset import Dataset
+from src.datasets.Dataset import Dataset
 
 
 class Kyoto1(Dataset):

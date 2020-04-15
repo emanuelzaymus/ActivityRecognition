@@ -4,8 +4,8 @@ from datetime import datetime
 import numpy as np
 import pandas as pd
 
-from DataArray import DataArray
-from datasets.Dataset import Dataset
+from src.DataArray import DataArray
+from src.datasets.Dataset import Dataset
 
 
 class _RawFileColumns:

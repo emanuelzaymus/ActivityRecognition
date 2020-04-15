@@ -3,7 +3,7 @@ from typing import Tuple
 
 import numpy as np
 
-from DataArray import DataArray
+from src.DataArray import DataArray
 
 ANOTHER_FEATURES_COUNT = 3  # 3 for features: SECONDS FROM MIDNIGHT, DAY OF THE WEEK, SECONDS ELAPSED
 

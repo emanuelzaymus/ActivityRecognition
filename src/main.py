@@ -2,15 +2,12 @@ from typing import List
 
 import matplotlib.pyplot as plt
 import numpy as np
-import pandas as pd
 from sklearn.preprocessing import StandardScaler
 
-import SVM
-import classifier
-import data_file_handling as fh
-import feature_extraction as fex
-from datasets.Dataset import Dataset
-from datasets.Kyoto1 import Kyoto1
+from src import data_file_handling as fh, classifiers, feature_extraction as fex
+from src.classifiers import SVM
+from src.datasets.Dataset import Dataset
+from src.datasets.Kyoto1 import Kyoto1
 
 
 def test_variable_window_sizes(data: np.ndarray,
@@ -30,7 +27,7 @@ def test_variable_window_sizes(data: np.ndarray,
 
 
 def plot(feature_array: np.ndarray, activities: np.ndarray):
-    X, y_ = classifier.split_features(feature_array)
+    X, y_ = classifiers.split_features(feature_array)
 
     sc = StandardScaler()
     # sc = RobustScaler()

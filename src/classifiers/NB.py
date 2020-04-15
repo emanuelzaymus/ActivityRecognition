@@ -1,7 +1,7 @@
 import numpy as np
 from sklearn.naive_bayes import CategoricalNB
 
-import classifier
+from src.classifiers import classifier
 
 
 def test_CategoricalNB(features: np.ndarray, activities: np.ndarray = None):

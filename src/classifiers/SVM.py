@@ -1,7 +1,7 @@
 import numpy as np
 from sklearn.svm import SVC
 from typing import List
-import classifier
+from src.classifiers import classifier
 
 
 def test_default_SVC(features: np.ndarray) -> float:
