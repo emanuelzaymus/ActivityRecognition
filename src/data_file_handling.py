@@ -19,6 +19,27 @@ class _RawFileColumns:
 
 
 def get_data_arrays_from_directory(dataset: Dataset, delimiter: str = None) -> list:
+    """
+        Loads and converts data in format like adlnormal - Kyoto 1 dataset.
+
+        From folder ``dataset.directory`` loads and converts all files ``dataset.files``. Every file-name has all
+        extensions ``dataset.extensions``. Numerical value of an activity - a certain data-file is stored in
+        ``dataset.extensions_activities``.
+
+        **Data in the file needs to be in following format separated by TAB:**
+            - DATE - YY-mm-dd
+            - TIME - HH:MM:SS.ffffff (milliseconds *.ffffff* are optional and are ignored by algorithm)
+            - SENSOR - name of the sensor
+            - VALUE - value of the sensor - is ignored
+            - ACTIVITY - optional, in format: *activity_name* *begin/start/end*
+        **Returned Numpy array in format: [[datetime.datetime SENSOR ACTIVITY]...]**
+            - datetime.datetime - created from DATE and TIME
+            - SENSOR - name of the sensor, unchanged
+            - ACTIVITY - empty activities are replaced by ``DataArray.NO_ACTIVITY``
+    :param dataset:
+    :param delimiter: Delimiter of the file data
+    :return: Loaded and converted data from file
+    """
     ret_data_list = []
 
     for file in dataset.files:
@@ -50,11 +71,10 @@ def get_data_array(file_name: str, delimiter: str = None) -> np.ndarray:
             - datetime.datetime - created from DATE and TIME
             - SENSOR - name of the sensor, unchanged
             - ACTIVITY - empty activities are replaced by ``DataArray.NO_ACTIVITY``
-    Parameters:
-        file_name (string): File path
-        delimiter (string): Delimiter of the file data
-    Returns:
-        ndarray: Loaded and converted data from file
+
+    :param file_name: File path
+    :param delimiter: Delimiter of the file data
+    :returns: Loaded and converted data from file (np.ndarray)
     """
     data: pd.DataFrame = pd.read_table(file_name, delimiter=delimiter, header=None,
                                        names=range(_RawFileColumns.NUMBER_OF_COLUMNS),

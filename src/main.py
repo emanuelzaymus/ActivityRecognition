@@ -5,9 +5,11 @@ import numpy as np
 from sklearn.preprocessing import StandardScaler
 
 from src import data_file_handling as fh, classifiers, feature_extraction as fex
-from src.classifiers import SVM
+from src.classifiers import SVM, classifier
+from src.classifiers.classifier import Preprocessing
 from src.datasets.Dataset import Dataset
 from src.datasets.Kyoto1 import Kyoto1
+from src.testing import test_kyoto1
 
 
 def test_variable_window_sizes(data: np.ndarray,
@@ -17,7 +19,7 @@ def test_variable_window_sizes(data: np.ndarray,
     for i in range(len(window_sizes)):
         print("Window size:", window_sizes[i])
         file_to_save[i, 0] = window_sizes[i]
-        features, activities = fex.extract_features(data, window_sizes[i])
+        features, activities = fex.extract_features_from_arrays(data, window_sizes[i])
 
         accuracy: float = SVM.test_default_SVC(features)
         print("Accuracy:", accuracy, '\n')
@@ -71,13 +73,10 @@ def plot(feature_array: np.ndarray, activities: np.ndarray):
     plt.show()
 
 
-dataset: Dataset = Kyoto1()
-data_arrays: list = fh.get_data_arrays_from_directory(dataset)
-
 # test_variable_window_sizes(data)
 
 # features, activities = fex.extract_features(data, window_size=30)
-features = fex.extract_features_from_arrays(data_arrays, 30, dataset.sensors, with_previous_class_feature=False)
+# features = fex.extract_features_from_arrays(data_arrays, 30, dataset.sensors, with_previous_class_feature=False)
 # np.savetxt("data/adlnormal_features_ws30.txt", features, delimiter='\t', fmt="%d")
 # np.savetxt("data/activities.txt", activities, delimiter='\t', fmt="%s")
 
@@ -90,7 +89,9 @@ features = fex.extract_features_from_arrays(data_arrays, 30, dataset.sensors, wi
 
 # SVM.test_c_gamma_parameters(features)
 
-print(features)
-SVM.test_best_SVC(features, dataset.activities)
+# SVM.test_best_SVC(features, dataset.activities)
 
 # plot(features, activities)
+
+classifier.PREPROCESSOR = Preprocessing.STANDARD_SCALER
+test_kyoto1.test_variable_window_sizes()

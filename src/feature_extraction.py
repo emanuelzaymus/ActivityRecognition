@@ -10,6 +10,13 @@ ANOTHER_FEATURES_COUNT = 3  # 3 for features: SECONDS FROM MIDNIGHT, DAY OF THE 
 
 def extract_features_from_arrays(data_arrays: list, window_size: int, sensors: list = None,
                                  with_previous_class_feature: bool = False) -> np.ndarray:
+    """
+    :param data_arrays:
+    :param window_size:
+    :param sensors:
+    :param with_previous_class_feature:
+    :return:
+    """
     result_data_array = None
 
     data_arr: np.ndarray
