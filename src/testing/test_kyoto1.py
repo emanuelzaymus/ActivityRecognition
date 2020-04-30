@@ -8,16 +8,22 @@ from src.datasets.Dataset import Dataset
 from src.datasets.Kyoto1 import Kyoto1
 import src.testing.window_size_tester as wst
 
+path: str = 'kyoto1/report_3-feature_testing/'
 # path: str = 'kyoto1/no_preprocessing/'
 # path: str = 'kyoto1/normalizer_l1/'
 # path: str = 'kyoto1/normalizer_l2/'
 # path: str = 'kyoto1/normalizer_max/'
-path: str = 'kyoto1/standard_scaler/'
+# path: str = 'kyoto1/standard_scaler/'
 # path: str = 'kyoto1/robust_scaler/'
 # path: str = 'kyoto1/min_max_scaler/'
 # path: str = 'kyoto1/max_abs_scaler/'
 # save: bool = True
 save: bool = False
+
+
+def test_default_SVC(windows_size: int = 30, with_previous_class_feature: bool = False):
+    features = __get_features(windows_size, with_previous_class_feature)
+    print(SVM.test_default_SVC(features, with_previous_class_feature=with_previous_class_feature))
 
 
 def test_all(windows_size: int = 30, with_previous_class_feature: bool = False):
@@ -34,8 +40,9 @@ def test_variable_window_sizes(window_sizes: list = None, with_previous_class_fe
     data_arrays, sensors = __get_data_arrays()
 
     # "window_size_testing-first_normalized.txt"
-    fname = path + "window_size_testing.txt" if not with_previous_class_feature else \
-        path + "window_size_testing-with_PCF.txt"
+    fname = path + "window_size_testing-CATEG_ENCODING-PREV_CLASS_FEAT-ROBUST.txt"
+    # fname = path + "window_size_testing-CATEG_ENCODING-PREV_CLASS_FEAT-STANDARD.txt" if not with_previous_class_feature else \
+    #     path + "window_size_testing-with_PCF.txt"
     wst.test_variable_window_sizes(data_arrays, sensors, window_sizes, with_previous_class_feature,
                                    fname if save else None)
 

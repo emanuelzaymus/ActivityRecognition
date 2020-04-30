@@ -48,7 +48,7 @@ def get_data_arrays_from_directory(dataset: Dataset, delimiter: str = None) -> l
             current_file_path = os.path.join(dataset.directory, file + dataset.extensions[i])
 
             data = get_data_array(current_file_path, delimiter)
-            data[:, DataArray.ACTIVITY] = dataset.extensions_activities[i]
+            data[:, DataArray.ACTIVITY] = dataset.extensions_activities[i]  # Replace activity
 
             one_recording = data if i == 0 else np.append(one_recording, data, axis=0)
 

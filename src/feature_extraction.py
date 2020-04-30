@@ -2,6 +2,7 @@ from datetime import datetime
 from typing import Tuple
 
 import numpy as np
+from sklearn.preprocessing import OneHotEncoder
 
 from src.DataArray import DataArray
 
@@ -25,6 +26,11 @@ def extract_features_from_arrays(data_arrays: list, window_size: int, sensors: l
         if with_previous_class_feature:
             data = __add_previous_class_feature(data)
         result_data_array = data if result_data_array is None else np.append(result_data_array, data, axis=0)
+
+    result_data_array = __encode_categorical_feature(result_data_array, 1)
+
+    if with_previous_class_feature:
+        result_data_array = __encode_categorical_feature(result_data_array, -2)
 
     return result_data_array
 
@@ -167,3 +173,13 @@ def __add_previous_class_feature(features: np.ndarray) -> np.ndarray:
 
     features = np.column_stack((feature_vectors, classes))
     return features
+
+
+def __encode_categorical_feature(data_array: np.ndarray, feature_index: int) -> np.ndarray:
+    features_before: np.ndarray = data_array[:, :feature_index]
+    categorical_feature: np.ndarray = data_array[:, feature_index].reshape(-1, 1)
+    features_after: np.ndarray = data_array[:, feature_index + 1:]
+
+    categorical_feature = OneHotEncoder().fit_transform(categorical_feature).toarray()
+
+    return np.concatenate((features_before, categorical_feature, features_after), axis=1)
