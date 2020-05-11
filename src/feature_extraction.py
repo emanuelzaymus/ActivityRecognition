@@ -6,7 +6,9 @@ from sklearn.preprocessing import OneHotEncoder
 
 from src.DataArray import DataArray
 
-ANOTHER_FEATURES_COUNT = 3  # 3 for features: SECONDS FROM MIDNIGHT, DAY OF THE WEEK, SECONDS ELAPSED
+# 4 for features: SECONDS FROM MIDNIGHT - FIRST RECORD, SECONDS FROM MIDNIGHT - LAST RECORD, DAY OF THE WEEK,
+# SECONDS ELAPSED
+ANOTHER_FEATURES_COUNT = 4
 
 
 def extract_features_from_arrays(data_arrays: list, window_size: int, sensors: list = None,
@@ -27,7 +29,7 @@ def extract_features_from_arrays(data_arrays: list, window_size: int, sensors: l
             data = __add_previous_class_feature(data)
         result_data_array = data if result_data_array is None else np.append(result_data_array, data, axis=0)
 
-    result_data_array = __encode_categorical_feature(result_data_array, 1)
+    result_data_array = __encode_categorical_feature(result_data_array, 2)
 
     if with_previous_class_feature:
         result_data_array = __encode_categorical_feature(result_data_array, -2)
@@ -89,14 +91,17 @@ def __fill_feature_vector_using_record_window(feature_vector: np.ndarray, record
     """
     datetime_first: datetime = record_window[0, DataArray.DATETIME]
     datetime_last: datetime = record_window[-1, DataArray.DATETIME]
-    # fill SECONDS FROM MIDNIGHT
+    # fill SECONDS FROM MIDNIGHT - FIRST RECORD
     feature_vector[0] = (datetime_first - datetime_first.replace(hour=0, minute=0, second=0)).total_seconds()
 
+    # fill SECONDS FROM MIDNIGHT - LAST RECORD
+    feature_vector[1] = (datetime_last - datetime_last.replace(hour=0, minute=0, second=0)).total_seconds()
+
     # fill DAY OF THE WEEK
-    feature_vector[1] = datetime_last.isoweekday()
+    feature_vector[2] = datetime_last.isoweekday()
 
     # fill SECONDS ELAPSED
-    feature_vector[2] = (datetime_last - datetime_first).total_seconds()
+    feature_vector[3] = (datetime_last - datetime_first).total_seconds()
 
     # fill SIMPLE SENSOR COUNTS
     window_sensors: np.ndarray = record_window[:, DataArray.SENSOR]
