@@ -1,3 +1,4 @@
+import time
 from typing import List
 
 import matplotlib.pyplot as plt
@@ -72,6 +73,8 @@ def plot(feature_array: np.ndarray, activities: np.ndarray):
     plt.legend(*scatter.legend_elements(), loc="upper right", title="Activities")
     plt.show()
 
+
+start_time = time.time()
 # test_variable_window_sizes(data)
 
 # features, activities = fex.extract_features(data, window_size=30)
@@ -95,11 +98,13 @@ def plot(feature_array: np.ndarray, activities: np.ndarray):
 # classifier.PREPROCESSOR = Preprocessing.NOTHING
 classifier.PREPROCESSOR = Preprocessing.STANDARD_SCALER
 # classifier.PREPROCESSOR = Preprocessing.ROBUST_SCALER
-test_kyoto1.test_variable_window_sizes(with_previous_class_feature=False)
+# test_kyoto1.test_variable_window_sizes(with_previous_class_feature=True)
 # test_kyoto1.test_c_gamma_parameters(37)
 
 
 # test_kyoto1.test_best_SVC(30, False)
-# test_kyoto1.test_default_SVC(30, False)
 
-# test_kyoto1.test_default_SVC(30, True)
+# test_kyoto1.test_default_SVC(30, False)
+test_kyoto1.test_default_SVC(30, True)
+
+print('Execution time: %s s' % (time.time() - start_time))

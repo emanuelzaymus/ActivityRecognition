@@ -7,6 +7,7 @@ import numpy as np
 from sklearn.metrics import accuracy_score, classification_report, confusion_matrix
 from sklearn.model_selection import KFold
 from sklearn.preprocessing import StandardScaler, Normalizer, RobustScaler, MinMaxScaler, MaxAbsScaler
+from sklearn.svm import SVC
 
 
 class Preprocessing(Enum):
@@ -57,7 +58,9 @@ def test(features: np.ndarray, clf, random_state: int = 0, activities: np.ndarra
     if not with_previous_class_feature:
         return __test(features, clf, random_state, activities, scale)
     else:
-        return __test_with_previous_class_feature(features, clf, activities, scale)
+        # return __test_with_previous_class_feature(features, clf, activities, scale)
+        return __test_with_previous_class_feature_predict_proba(features, clf, activities, scale)
+        # return __test_with_previous_class_feature_decision_func(features, clf, activities, scale)
 
 
 def __test(features: np.ndarray, clf, random_state: int = 0, activities: np.ndarray = None,
@@ -154,4 +157,101 @@ def __test_with_previous_class_feature(features: np.ndarray, clf, activities: np
         scores_overall.append(acc_score)
         # print("score fold:", acc_score)
 
+    return statistics.mean(scores_overall) * 100
+
+
+def __test_with_previous_class_feature_predict_proba(features: np.ndarray, clf: SVC, activities: np.ndarray = None,
+                                                     scale: bool = True) -> float:
+    X, y = __split_features(features)
+    scores_overall = []
+
+    kf = KFold(n_splits=5, shuffle=False)
+    for train_index, test_index in kf.split(X):
+        X_train, X_test = X[train_index], X[test_index]
+        y_train, y_test = y[train_index], y[test_index]
+
+        X_train = PREPROCESSOR.fit_transform(X_train)
+        clf.fit(X_train, y_train)
+
+        predictions_fold = []
+
+        # print('classes:', clf.classes_)
+
+        for i in range(X_test.shape[0]):
+            vector: np.ndarray = X_test[i]
+            if i == 0:
+                vector[-5:] = 0.2
+            else:
+                last: np.ndarray = clf.predict_proba([X_test[i - 1]])
+                # print('last:', last, end=' ')
+                vector[-5:] = last
+
+            # Test
+            vector = vector.reshape(1, -1)
+            vector = PREPROCESSOR.transform(vector)
+            predict = clf.predict(vector)
+            # print('predict:', predict, 'actual:', y_test[i])
+            predictions_fold.append(predict)
+
+        # print("Report:\n", classification_report(y_test, predictions_fold, target_names=activities))
+        # print("Confusion matrix:\n", confusion_matrix(y_test, predictions_fold), end="\n\n")
+        acc_score = accuracy_score(y_test, predictions_fold)
+        scores_overall.append(acc_score)
+        # print("score fold:", acc_score)
+
+    return statistics.mean(scores_overall) * 100
+
+
+def __test_with_previous_class_feature_decision_func(features: np.ndarray, clf: SVC, activities: np.ndarray = None,
+                                                     scale: bool = True) -> float:
+    X, y = __split_features(features)
+    scores_overall = []
+
+    maximum = -9999999999
+
+    kf = KFold(n_splits=5, shuffle=False)
+    for train_index, test_index in kf.split(X):
+        X_train, X_test = X[train_index], X[test_index]
+        y_train, y_test = y[train_index], y[test_index]
+
+        # np.place(X_train[:, -5:], X_train[:, -5:] == 1, 5)
+
+        X_train = PREPROCESSOR.fit_transform(X_train)
+        clf.fit(X_train, y_train)
+
+        predictions_fold = []
+
+        # print('classes:', clf.classes_)
+
+        for i in range(X_test.shape[0]):
+            vector: np.ndarray = X_test[i]
+            if i == 0:
+                vector[-5:] = 0.2
+            else:
+                prev: np.ndarray = np.array([X_train[i - 1]])
+
+                # print(prev)
+                # print(prev.astype(int))
+                last: np.ndarray = clf.decision_function(prev)
+                # print('last:', last, end=' ')
+                vector[-5:] = last
+
+            if maximum < np.amax(vector[-5:]):
+                maximum = np.amax(vector[-5:])
+
+            # Test
+            vector = vector.reshape(1, -1)
+            vector = PREPROCESSOR.transform(vector)
+            # print('transformed:', vector[0, -5:], end=' ')
+            predict = clf.predict(vector)
+            # print('predict:', predict, 'actual:', y_test[i])
+            predictions_fold.append(predict)
+
+        # print("Report:\n", classification_report(y_test, predictions_fold, target_names=activities))
+        # print("Confusion matrix:\n", confusion_matrix(y_test, predictions_fold), end="\n\n")
+        acc_score = accuracy_score(y_test, predictions_fold)
+        scores_overall.append(acc_score)
+        # print("score fold:", acc_score)
+
+    print('MAXIMUM:', maximum)
     return statistics.mean(scores_overall) * 100

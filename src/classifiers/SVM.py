@@ -5,7 +5,8 @@ from src.classifiers import classifier
 
 
 def test_default_SVC(features: np.ndarray, with_previous_class_feature: bool = False) -> float:
-    clf = SVC()
+    # clf = SVC()
+    clf = SVC(probability=with_previous_class_feature, break_ties=with_previous_class_feature)
     return classifier.test(features, clf, with_previous_class_feature=with_previous_class_feature)
 
 
