@@ -72,6 +72,7 @@ def __test(features: np.ndarray, clf, random_state: int = 0, activities: np.ndar
     kf = KFold(n_splits=5, shuffle=True, random_state=random_state)
     # kf = KFold(n_splits=5, shuffle=False)
     for train_index, test_index in kf.split(X):
+        # print('split')
         X_train, X_test = X[train_index], X[test_index]
         y_train, y_test = y[train_index], y[test_index]
 
@@ -79,7 +80,7 @@ def __test(features: np.ndarray, clf, random_state: int = 0, activities: np.ndar
         clf.fit(X_train, y_train)
         predict = clf.predict(X_test)
 
-        # print("Report:\n", classification_report(y_test, predict, target_names=activities))
+        # print("Report:\n", classification_report(y_test, predict))  # , target_names=activities))
         # print("Confusion matrix:\n", confusion_matrix(y_test, predict), end="\n\n")
         acc_score = accuracy_score(y_test, predict)
         scores.append(acc_score)
@@ -175,29 +176,32 @@ def __test_with_previous_class_feature_predict_proba(features: np.ndarray, clf: 
 
         predictions_fold = []
 
-        # print('classes:', clf.classes_)
+        print('classes:', clf.classes_)
 
         for i in range(X_test.shape[0]):
             vector: np.ndarray = X_test[i]
             if i == 0:
-                vector[-5:] = 0.2
+                vector[-11:] = 1 / 11
             else:
                 last: np.ndarray = clf.predict_proba([X_test[i - 1]])
                 # print('last:', last, end=' ')
-                vector[-5:] = last
+                vector[-11:] = last
 
             # Test
             vector = vector.reshape(1, -1)
             vector = PREPROCESSOR.transform(vector)
             predict = clf.predict(vector)
-            # print('predict:', predict, 'actual:', y_test[i])
+            # pp = clf.predict_proba(vector)
+            # print('predict:', predict, 'predict_proba:', pp, 'actual:', y_test[i])
             predictions_fold.append(predict)
 
-        # print("Report:\n", classification_report(y_test, predictions_fold, target_names=activities))
+        # print(np.unique(y_test))
+
+        # print("Report:\n", classification_report(y_test, predictions_fold))  # , target_names=activities))
         # print("Confusion matrix:\n", confusion_matrix(y_test, predictions_fold), end="\n\n")
         acc_score = accuracy_score(y_test, predictions_fold)
         scores_overall.append(acc_score)
-        # print("score fold:", acc_score)
+        print("score fold:", acc_score)
 
     return statistics.mean(scores_overall) * 100
 

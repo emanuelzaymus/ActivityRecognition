@@ -24,9 +24,11 @@ def extract_features_from_arrays(data_arrays: list, window_size: int, sensors: l
 
     data_arr: np.ndarray
     for data_arr in data_arrays:
-        data, a = extract_features(data_arr, window_size, all_samples_labeled=True, sensors=np.array(sensors))
-        if with_previous_class_feature:
-            data = __add_previous_class_feature(data)
+        data, a = extract_features(data_arr, window_size, all_samples_labeled=True, sensors=np.array(sensors),
+                                   with_previous_class_feature=with_previous_class_feature,
+                                   encode_categorical_feature=False)
+        # if with_previous_class_feature: # TODO check if it's right ?!
+        #     data = __add_previous_class_feature(data)
         result_data_array = data if result_data_array is None else np.append(result_data_array, data, axis=0)
 
     result_data_array = __encode_categorical_feature(result_data_array, 2)
@@ -38,7 +40,8 @@ def extract_features_from_arrays(data_arrays: list, window_size: int, sensors: l
 
 
 def extract_features(data_array: np.ndarray, window_size: int, all_samples_labeled: bool = False,
-                     sensors: np.ndarray = None, with_previous_class_feature: bool = False) \
+                     sensors: np.ndarray = None, with_previous_class_feature: bool = False,
+                     encode_categorical_feature: bool = True) \
         -> Tuple[np.ndarray, np.ndarray]:
     """
         Extracts feature vectors from ``data_array`` based on windowing with ``window_size``.
@@ -80,6 +83,12 @@ def extract_features(data_array: np.ndarray, window_size: int, all_samples_label
 
     if with_previous_class_feature:
         features = __add_previous_class_feature(features)
+
+    if encode_categorical_feature:
+        features = __encode_categorical_feature(features, 2)
+
+    if with_previous_class_feature and encode_categorical_feature:
+        features = __encode_categorical_feature(features, -2)
 
     return features, activities
 

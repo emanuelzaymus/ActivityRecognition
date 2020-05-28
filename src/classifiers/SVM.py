@@ -4,10 +4,12 @@ from typing import List
 from src.classifiers import classifier
 
 
-def test_default_SVC(features: np.ndarray, with_previous_class_feature: bool = False) -> float:
+def test_default_SVC(features: np.ndarray, activities: np.ndarray = None,
+                     with_previous_class_feature: bool = False) -> float:
     # clf = SVC()
     clf = SVC(probability=with_previous_class_feature, break_ties=with_previous_class_feature)
-    return classifier.test(features, clf, with_previous_class_feature=with_previous_class_feature)
+    return classifier.test(features, clf, activities=activities,
+                           with_previous_class_feature=with_previous_class_feature)
 
 
 def test_kernels(features: np.ndarray, fname_to_save: str = None):
