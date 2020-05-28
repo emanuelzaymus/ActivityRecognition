@@ -181,11 +181,11 @@ def __test_with_previous_class_feature_predict_proba(features: np.ndarray, clf: 
         for i in range(X_test.shape[0]):
             vector: np.ndarray = X_test[i]
             if i == 0:
-                vector[-11:] = 1 / 11
+                vector[-5:] = 1 / 5
             else:
                 last: np.ndarray = clf.predict_proba([X_test[i - 1]])
                 # print('last:', last, end=' ')
-                vector[-11:] = last
+                vector[-5:] = last
 
             # Test
             vector = vector.reshape(1, -1)

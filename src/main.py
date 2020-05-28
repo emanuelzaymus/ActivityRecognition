@@ -10,7 +10,7 @@ from src.classifiers import SVM, classifier
 from src.classifiers.classifier import Preprocessing
 from src.datasets.Dataset import Dataset
 from src.datasets.Kyoto1 import Kyoto1
-from src.testing import test_kyoto1, test_aruba
+from src.testing import test_kyoto1, test_aruba, test_kyoto2
 
 
 def test_variable_window_sizes(data: np.ndarray,
@@ -96,7 +96,7 @@ start_time = time.time()
 # plot(features, activities)
 
 # classifier.PREPROCESSOR = Preprocessing.NOTHING
-# classifier.PREPROCESSOR = Preprocessing.STANDARD_SCALER
+classifier.PREPROCESSOR = Preprocessing.STANDARD_SCALER
 # classifier.PREPROCESSOR = Preprocessing.ROBUST_SCALER
 # test_kyoto1.test_variable_window_sizes(with_previous_class_feature=True)
 # test_kyoto1.test_c_gamma_parameters(37)
@@ -104,8 +104,8 @@ start_time = time.time()
 
 # test_kyoto1.test_best_SVC(30, False)
 
-# test_kyoto1.test_default_SVC(30, False)
-# test_kyoto1.test_default_SVC(30, True)
+test_kyoto2.test_default_SVC(30, False)
+test_kyoto2.test_default_SVC(30, True)
 
 # test_aruba.test_default_SVC(30, True)
 # classifier.PREPROCESSOR = Preprocessing.STANDARD_SCALER
@@ -115,14 +115,15 @@ start_time = time.time()
 #
 
 
-classifier.PREPROCESSOR = Preprocessing.STANDARD_SCALER
-test_aruba.test_variable_window_sizes(with_previous_class_feature=True, what="PREVIOUS_CLASS-STANDART_2")
-print('Execution time: %s s' % (time.time() - start_time))
+# classifier.PREPROCESSOR = Preprocessing.STANDARD_SCALER
+# test_aruba.test_variable_window_sizes(with_previous_class_feature=True, what="PREVIOUS_CLASS-STANDART_2")
+# print('Execution time: %s s' % (time.time() - start_time))
+#
+# classifier.PREPROCESSOR = Preprocessing.ROBUST_SCALER
+# test_aruba.test_variable_window_sizes(with_previous_class_feature=True, what="PREVIOUS_CLASS-ROBUST_2")
+# print('Execution time: %s s' % (time.time() - start_time))
+#
+# classifier.PREPROCESSOR = Preprocessing.NOTHING
+# test_aruba.test_variable_window_sizes(with_previous_class_feature=True, what="PREVIOUS_CLASS-NO_SCALE_2")
 
-classifier.PREPROCESSOR = Preprocessing.ROBUST_SCALER
-test_aruba.test_variable_window_sizes(with_previous_class_feature=True, what="PREVIOUS_CLASS-ROBUST_2")
-print('Execution time: %s s' % (time.time() - start_time))
-
-classifier.PREPROCESSOR = Preprocessing.NOTHING
-test_aruba.test_variable_window_sizes(with_previous_class_feature=True, what="PREVIOUS_CLASS-NO_SCALE_2")
 print('Execution time: %s s' % (time.time() - start_time))
