@@ -1,4 +1,5 @@
 import os
+from typing import Tuple
 
 import numpy as np
 import pandas as pd
@@ -6,28 +7,27 @@ import pandas as pd
 from src import data_file_handling as dfh
 from src.DataArray import DataArray
 from src.data_file_handling import _RawFileColumns
+from src.datasets.Arbua import Aruba
 from src.datasets.Dataset import Dataset
 from src.datasets.Kyoto2 import Kyoto2
+from src.datasets.Kyoto3 import Kyoto3
+import src.feature_extraction as fex
+import src.data_file_handling as fh
 
-ret_data_list: np.ndarray = None
-dataset: Dataset = Kyoto2()
-for file in dataset.files:
-    one_recording: np.ndarray = None
-    for i in range(len(dataset.extensions_activities)):
-        current_file_path = os.path.join(dataset.directory, file + dataset.extensions[i])
 
-        data: pd.DataFrame = pd.read_table(current_file_path, delimiter=None, header=None,
-                                           names=range(_RawFileColumns.NUMBER_OF_COLUMNS),
-                                           index_col=False)
+def __get_features_activities(windows_size: int, with_previous_class_feature: bool = False) -> Tuple[
+    np.ndarray, np.ndarray]:
+    return fex.extract_features(__get_data_array(), windows_size,
+                                with_previous_class_feature=with_previous_class_feature)
 
-        # data[:, DataArray.ACTIVITY] = dataset.extensions_activities[i]  # Replace activity
 
-        one_recording = data if i == 0 else np.append(one_recording, data, axis=0)
+def __get_data_array() -> np.ndarray:
+    return fh.get_data_array(Aruba().file)
 
-    # ret_data_list.append(one_recording)
-    ret_data_list = one_recording if file == dataset.files[0] else np.append(ret_data_list, one_recording, axis=0)
 
-print(ret_data_list)
-print(ret_data_list.shape)
+# a: np.ndarray = __get_features_activities(1)
+a: np.ndarray = __get_data_array()
 
-print(np.unique(ret_data_list[:, 2]))
+print(np.unique(a[:, 1]))
+for i in np.unique(a[:, 1]):
+    print("'" + i + "'" + ", ", end="")

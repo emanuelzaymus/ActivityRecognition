@@ -8,10 +8,10 @@ from src.datasets.Arbua import Aruba
 import src.testing.window_size_tester as wst
 
 path: str = 'aruba/report_5/'
-save: bool = True
+# save: bool = True
 
 
-# save: bool = False
+save: bool = False
 
 
 def test_default_SVC(windows_size: int = 30, with_previous_class_feature: bool = False):
@@ -37,7 +37,7 @@ def test_variable_window_sizes(window_sizes: list = None, with_previous_class_fe
     # fname = path + "window_size_testing-CATEG_ENCODING-PREV_CLASS_FEAT-STANDARD.txt" if not with_previous_class_feature else \
     #     path + "window_size_testing-with_PCF.txt"
     wst.test_variable_window_sizes_aruba(__get_data_array(), window_sizes, with_previous_class_feature,
-                                   fname if save else None)
+                                         fname if save else None)
 
 
 def test_kernels(windows_size: int = 30):

@@ -1,3 +1,9 @@
+from typing import Tuple
+
+import numpy as np
+import src.data_file_handling as fh
+import src.feature_extraction as fex
+
 from src.datasets.Dataset import Dataset
 
 
@@ -37,3 +43,13 @@ class Kyoto2(Dataset):
     @property
     def sensors(self) -> list:
         return self.__SENSORS
+
+    def get_features(self, windows_size: int, with_previous_class_feature: bool = False) -> np.ndarray:
+        data_arrays, sensors = self.get_data_arrays()
+        return fex.extract_features_from_arrays(data_arrays, windows_size, sensors, with_previous_class_feature)
+
+    def get_activities(self) -> np.ndarray:
+        return np.array(self.__ACTIVITIES)
+
+    def get_data_arrays(self) -> Tuple[list, list]:
+        return fh.get_data_arrays_from_directory(self), self.__SENSORS

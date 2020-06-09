@@ -6,9 +6,9 @@ from src.classifiers import SVM
 
 from src.datasets.Dataset import Dataset
 import src.testing.window_size_tester as wst
-from src.datasets.Kyoto2 import Kyoto2
+from src.datasets.Kyoto3 import Kyoto3
 
-path: str = 'kyoto2/report_5/'
+path: str = 'kyoto3/report_5/'
 # path: str = 'kyoto1/no_preprocessing/'
 # path: str = 'kyoto1/normalizer_l1/'
 # path: str = 'kyoto1/normalizer_l2/'
@@ -17,8 +17,8 @@ path: str = 'kyoto2/report_5/'
 # path: str = 'kyoto1/robust_scaler/'
 # path: str = 'kyoto1/min_max_scaler/'
 # path: str = 'kyoto1/max_abs_scaler/'
-save: bool = True
-# save: bool = False
+# save: bool = True
+save: bool = False
 
 
 def test_default_SVC(windows_size: int = 30, with_previous_class_feature: bool = False):
@@ -34,14 +34,14 @@ def test_all(windows_size: int = 30, with_previous_class_feature: bool = False):
     test_best_SVC(windows_size, with_previous_class_feature)
 
 
-def test_variable_window_sizes(window_sizes: list = None, with_previous_class_feature: bool = False, what: str = None):
+def test_variable_window_sizes(window_sizes: list = None, with_previous_class_feature: bool = False):
     if window_sizes is None:
         window_sizes = [5, 7, 10, 12, 15, 17, 19, 22, 25, 27, 30, 32, 35, 37, 40]
         # window_sizes = [5, 12, 19, 30, 40]
     data_arrays, sensors = __get_data_arrays()
 
     # "window_size_testing-first_normalized.txt"
-    fname = path + "window_size_testing-" + what + ".txt"
+    fname = path + "window_size_testing-PREV_CLASS_VIA_PREDICT_PROBA-NO_SCALE.txt"
     # fname = path + "window_size_testing-CATEG_ENCODING-PREV_CLASS_FEAT-STANDARD.txt" if not with_previous_class_feature else \
     #     path + "window_size_testing-with_PCF.txt"
     wst.test_variable_window_sizes(data_arrays, sensors, window_sizes, with_previous_class_feature,
@@ -70,8 +70,8 @@ def test_best_SVC(windows_size: int = 30, with_previous_class_feature: bool = Fa
 
 
 def __get_data_arrays() -> Tuple[list, list]:
-    dataset: Dataset = Kyoto2()
-    return fh.get_data_arrays_from_directory(dataset), dataset.sensors
+    dataset: Dataset = Kyoto3()
+    return fh.get_data_arrays_from_directory_kyoto3(dataset), dataset.sensors
 
 
 def __get_features(windows_size: int, with_previous_class_feature: bool = False) -> np.ndarray:
@@ -80,4 +80,4 @@ def __get_features(windows_size: int, with_previous_class_feature: bool = False)
 
 
 def __get_activities() -> np.ndarray:
-    return np.array(Kyoto2().activities)
+    return np.array(Kyoto3().activities)

@@ -66,7 +66,7 @@ def extract_features(data_array: np.ndarray, window_size: int, all_samples_label
             Used activities in its order (indices of the activities are theirs positions in the array)
     """
     data: np.ndarray = data_array.copy()
-    activities: np.ndarray = __fill_missing_activities(data) if not all_samples_labeled else None
+    activities: np.ndarray = fill_missing_activities(data) if not all_samples_labeled else None
     if sensors is None:
         sensors = __get_sensors(data)
     n_f_vectors: int = data.shape[0] - window_size + 1  # number of rows - window_size + 1
@@ -129,7 +129,7 @@ def __get_sensors(data_array: np.ndarray) -> np.ndarray:
     return np.unique(data_array[:, DataArray.SENSOR])
 
 
-def __fill_missing_activities(data_array: np.ndarray) -> np.ndarray:
+def fill_missing_activities(data_array: np.ndarray) -> np.ndarray:
     """
     Fills and replaces ACTIVITY values with NUMBER (index) OF THE ACTIVITY in the parameter ``data_array``.
 
