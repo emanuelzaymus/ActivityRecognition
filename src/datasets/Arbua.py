@@ -1,4 +1,4 @@
-from typing import Tuple
+from typing import Tuple, List
 
 import numpy as np
 
@@ -8,6 +8,7 @@ from src.datasets.Dataset import Dataset
 
 
 class Aruba(Dataset):
+    """ TODO Aruba comment """
     __FILE = 'data/data_aruba_formatted_5days.txt'
 
     __ACTIVITIES = ['Bed_to_Toilet', 'Eating', 'Enter_Home', 'Housekeeping', 'Leave_Home', 'Meal_Preparation', 'Relax',
@@ -24,7 +25,7 @@ class Aruba(Dataset):
     def get_activities(self) -> np.ndarray:
         return np.array(self.__ACTIVITIES)
 
-    def get_data_arrays(self) -> Tuple[list, list]:
+    def get_data_arrays(self) -> Tuple[List[np.ndarray], List[str]]:
         data_array: np.ndarray = self.__get_data_array()
         fex.fill_missing_activities(data_array)
         return [data_array], self.__SENSORS

@@ -35,7 +35,6 @@ def get_data_array(file_name: str, delimiter: str = None) -> np.ndarray:
     :param delimiter: Delimiter of the file data
     :returns: Loaded and converted data from file (np.ndarray)
     """
-    # print(file_name)
     try:
         with open(file_name, 'rb') as f:
             data: pd.DataFrame = __read_table(f, delimiter, 'utf8')
@@ -67,10 +66,7 @@ def __convert_to_datetime(data: np.ndarray):
             try:
                 datetime_object: datetime = datetime.strptime(date + ' ' + time[:8], '%Y-%m-%d %H.%M.%S')
             except:
-                try:
-                    datetime_object: datetime = datetime.strptime(date + ' ' + time[:5], '%Y-%m-%d %H:%M')
-                except:
-                    print(date, time)
+                datetime_object: datetime = datetime.strptime(date + ' ' + time[:5], '%Y-%m-%d %H:%M')
 
         row[DataArray.DATETIME] = datetime_object
 

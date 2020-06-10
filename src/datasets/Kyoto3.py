@@ -1,5 +1,5 @@
 import os
-from typing import Tuple
+from typing import Tuple, List
 
 import numpy as np
 
@@ -10,6 +10,7 @@ from src.datasets.Dataset import Dataset
 
 
 class Kyoto3(Dataset):
+    """ TODO Kyoto3 comment """
     __DIRECTORY = 'data/kyoto3'
     __ACTIVITIES = ['Fill_medication_dispenser', 'Watch_DVD', 'Water_plants', 'Answer_the_phone',
                     'Prepare_birthday_card', 'Prepare_soup', 'Clean', 'Choose_outfit']
@@ -80,10 +81,10 @@ class Kyoto3(Dataset):
     def get_activities(self) -> np.ndarray:
         return np.array(self.__ACTIVITIES)
 
-    def get_data_arrays(self) -> Tuple[list, list]:
+    def get_data_arrays(self) -> Tuple[List[np.ndarray], List[str]]:
         return self.__get_data_arrays_from_directory(), self.__SENSORS
 
-    def __get_data_arrays_from_directory(self, delimiter: str = None) -> list:
+    def __get_data_arrays_from_directory(self, delimiter: str = None) -> List[np.ndarray]:
         ret_data_list = []
 
         for file_list in self.__ALL_FILES_BY_DIRECTORIES:

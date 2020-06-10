@@ -68,11 +68,8 @@ def __test(features: np.ndarray, clf, random_state: int = 0, activities: np.ndar
     X, y = __split_features(features)
     scores = []
 
-    # TODO: shuffle=True
     kf = KFold(n_splits=5, shuffle=True, random_state=random_state)
-    # kf = KFold(n_splits=5, shuffle=False)
     for train_index, test_index in kf.split(X):
-        # print('split')
         X_train, X_test = X[train_index], X[test_index]
         y_train, y_test = y[train_index], y[test_index]
 

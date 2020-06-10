@@ -1,5 +1,5 @@
 from datetime import datetime
-from typing import Tuple
+from typing import Tuple, List
 
 import numpy as np
 from sklearn.preprocessing import OneHotEncoder
@@ -11,8 +11,9 @@ from src.DataArray import DataArray
 ANOTHER_FEATURES_COUNT = 4
 
 
-def extract_features_from_arrays(data_arrays: list, window_size: int, sensors: list = None,
+def extract_features_from_arrays(data_arrays: List[np.ndarray], window_size: int, sensors: List[str] = None,
                                  with_previous_class_feature: bool = False) -> np.ndarray:
+    """ TODO: comment """
     result_data_array = None
 
     data_arr: np.ndarray
@@ -20,8 +21,7 @@ def extract_features_from_arrays(data_arrays: list, window_size: int, sensors: l
         data, a = extract_features(data_arr, window_size, all_samples_labeled=True, sensors=np.array(sensors),
                                    with_previous_class_feature=with_previous_class_feature,
                                    encode_categorical_feature=False)
-        # if with_previous_class_feature: # TODO check if it's right ?!
-        #     data = __add_previous_class_feature(data)
+
         result_data_array = data if result_data_array is None else np.append(result_data_array, data, axis=0)
 
     result_data_array = __encode_categorical_feature(result_data_array, 2)

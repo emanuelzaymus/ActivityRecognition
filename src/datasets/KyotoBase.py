@@ -19,10 +19,10 @@ class KyotoBase(Dataset):
     def get_activities(self) -> np.ndarray:
         return np.array(self._activities)
 
-    def get_data_arrays(self) -> Tuple[list, list]:
+    def get_data_arrays(self) -> Tuple[List[np.ndarray], List[str]]:
         return self.__get_data_arrays_from_directory(), self._sensors
 
-    def __get_data_arrays_from_directory(self, delimiter: str = None) -> list:
+    def __get_data_arrays_from_directory(self, delimiter: str = None) -> List[np.ndarray]:
         ret_data_list = []
 
         for file in self._files:

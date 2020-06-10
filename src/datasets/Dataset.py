@@ -1,5 +1,5 @@
 from abc import abstractmethod
-from typing import Tuple
+from typing import Tuple, List
 
 import numpy as np
 
@@ -15,5 +15,8 @@ class Dataset:
         pass
 
     @abstractmethod
-    def get_data_arrays(self) -> Tuple[list, list]:
+    def get_data_arrays(self) -> Tuple[List[np.ndarray], List[str]]:
+        """
+        TODO: comment -> also with return values explanation
+        """
         pass

@@ -1,3 +1,5 @@
+from typing import List
+
 import src.testing.TestParameters as Params
 from src.classifiers import SVM
 from src.datasets.Dataset import Dataset
@@ -18,9 +20,9 @@ class SvmTester:
     def test_default_svm(self, windows_size: int = 30,
                          with_previous_class_feature: bool = Params.WITH_PREVIOUS_CLASS_FEATURE):
         features = self.dataset.get_features(windows_size, with_previous_class_feature)
-        print(SVM.test_default_SVC(features, with_previous_class_feature=with_previous_class_feature))
+        print(SVM.test_default_svm(features, with_previous_class_feature=with_previous_class_feature))
 
-    def test_variable_window_sizes(self, window_sizes: list = Params.WINDOW_SIZES,
+    def test_variable_window_sizes(self, window_sizes: List[int] = Params.WINDOW_SIZES,
                                    with_previous_class_feature: bool = False):
         data_arrays, sensors = self.dataset.get_data_arrays()
         f_name = self.__get_f_name("window_size_testing")
@@ -41,5 +43,5 @@ class SvmTester:
     def test_best_svm(self, windows_size: int = 30,
                       with_previous_class_feature: bool = Params.WITH_PREVIOUS_CLASS_FEATURE):
         features = self.dataset.get_features(windows_size, with_previous_class_feature)
-        SVM.test_best_SVC(features, self.dataset.get_activities(),
+        SVM.test_best_svm(features, self.dataset.get_activities(),
                           with_previous_class_feature=with_previous_class_feature)

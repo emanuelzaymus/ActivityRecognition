@@ -4,6 +4,7 @@ from src.datasets.KyotoBase import KyotoBase
 
 
 class Kyoto1(KyotoBase):
+    """ TODO Kyoto1 comment """
     __DIRECTORY = 'data/kyoto1'
     __ACTIVITIES = ['Phone_Call', 'Wash_hands', 'Cook', 'Eat', 'Clean']
 
