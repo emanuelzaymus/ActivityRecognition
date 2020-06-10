@@ -1,8 +1,15 @@
-from src.classifiers import classifier
-from src.classifiers.classifier import Preprocessing
+from typing import List
 
-WITH_PREVIOUS_CLASS_FEATURE = False
+from src.classifiers.Preprocessing import Preprocessing
 
-WINDOW_SIZES = [5, 7, 10, 12, 15, 17, 19, 22, 25, 27, 30, 32, 35, 37, 40]  # [5, 12, 19, 30, 40]
+""" 
+TODO: comment for Parameters
+"""
 
-classifier.PREPROCESSOR = Preprocessing.STANDARD_SCALER
+WITH_PREVIOUS_CLASS_FEATURE: bool = False
+
+WINDOW_SIZES: List[int] = [5, 7, 10, 12, 15, 17, 19, 22, 25, 27, 30, 32, 35, 37, 40]  # [5, 12, 19, 30, 40]
+
+PREPROCESSOR: Preprocessing = Preprocessing.STANDARD_SCALER
+
+RANDOM_STATE: int = 0

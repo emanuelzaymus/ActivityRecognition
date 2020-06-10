@@ -7,7 +7,7 @@ import pandas as pd
 from src import data_file_handling as dfh
 from src.DataArray import DataArray
 from src.data_file_handling import _RawFileColumns
-from src.datasets.Arbua import Aruba
+from src.datasets.Aruba import Aruba
 from src.datasets.Dataset import Dataset
 from src.datasets.Kyoto2 import Kyoto2
 from src.datasets.Kyoto3 import Kyoto3

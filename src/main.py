@@ -1,6 +1,6 @@
 import time
 
-from src.datasets.Arbua import Aruba
+from src.datasets.Aruba import Aruba
 from src.datasets.Kyoto1 import Kyoto1
 from src.datasets.Kyoto2 import Kyoto2
 from src.datasets.Kyoto3 import Kyoto3
