@@ -2,6 +2,7 @@ import numpy as np
 from sklearn.svm import SVC
 from typing import List
 from src.classifiers import classifier
+import src.feature_extraction as fex
 
 
 def test_default_SVC(features: np.ndarray, activities: np.ndarray = None,
@@ -10,6 +11,24 @@ def test_default_SVC(features: np.ndarray, activities: np.ndarray = None,
     clf = SVC(probability=with_previous_class_feature, break_ties=with_previous_class_feature)
     return classifier.test(features, clf, activities=activities,
                            with_previous_class_feature=with_previous_class_feature)
+
+
+def test_variable_window_sizes(data_arrays: list, sensors: list, window_sizes: list,
+                               with_previous_class_feature: bool = False, fname_to_save: str = None):
+    file_to_save: np.ndarray = np.zeros((len(window_sizes), 2))
+
+    for i in range(len(window_sizes)):
+        print("Window size:", window_sizes[i])
+        file_to_save[i, 0] = window_sizes[i]
+        features = fex.extract_features_from_arrays(data_arrays, window_sizes[i], sensors,
+                                                    with_previous_class_feature=with_previous_class_feature)
+
+        accuracy: float = test_default_SVC(features, with_previous_class_feature=with_previous_class_feature)
+        print("Accuracy:", accuracy, '\n')
+        file_to_save[i, 1] = accuracy
+
+    if fname_to_save is not None:
+        np.savetxt("results/" + fname_to_save, file_to_save, delimiter='\t', fmt="%.4f")
 
 
 def test_kernels(features: np.ndarray, fname_to_save: str = None):

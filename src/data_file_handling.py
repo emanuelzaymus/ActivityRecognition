@@ -1,13 +1,9 @@
-import codecs
-import os
 from datetime import datetime
 
 import numpy as np
 import pandas as pd
 
 from src.DataArray import DataArray
-from src.datasets.Dataset import Dataset
-from src.datasets.Kyoto3 import Kyoto3
 
 
 class _RawFileColumns:
@@ -15,45 +11,9 @@ class _RawFileColumns:
 
     DATE = 0
     TIME = 1
-    # SENSOR = 2
+    SENSOR = 2
     VALUE = 3
     # ACTIVITY = 4
-
-
-def get_data_arrays_from_directory_kyoto3(dataset: Kyoto3, delimiter: str = None) -> list:
-    ret_data_list = []
-
-    for file_list in dataset.ALL:
-        one_recording: np.ndarray = None
-        for file in file_list:
-            current_file_path = os.path.join(dataset.directory, file)
-
-            data = get_data_array(current_file_path, delimiter)
-            data[:, DataArray.ACTIVITY] = dataset.get_activity(file[-3:])  # Replace activity
-
-            one_recording = data if file == file_list[0] else np.append(one_recording, data, axis=0)
-
-        ret_data_list.append(one_recording)
-
-    return ret_data_list
-
-
-def get_data_arrays_from_directory(dataset: Dataset, delimiter: str = None) -> list:
-    ret_data_list = []
-
-    for file in dataset.files:
-        one_recording: np.ndarray = None
-        for i in range(len(dataset.extensions_activities)):
-            current_file_path = os.path.join(dataset.directory, file + dataset.extensions[i])
-
-            data = get_data_array(current_file_path, delimiter)
-            data[:, DataArray.ACTIVITY] = dataset.extensions_activities[i]  # Replace activity
-
-            one_recording = data if i == 0 else np.append(one_recording, data, axis=0)
-
-        ret_data_list.append(one_recording)
-
-    return ret_data_list
 
 
 def get_data_array(file_name: str, delimiter: str = None) -> np.ndarray:
@@ -75,16 +35,25 @@ def get_data_array(file_name: str, delimiter: str = None) -> np.ndarray:
     :param delimiter: Delimiter of the file data
     :returns: Loaded and converted data from file (np.ndarray)
     """
-    print(file_name)
-    with open(file_name, 'rb') as f:
-        data: pd.DataFrame = pd.read_table(f, delimiter=delimiter, header=None,
-                                           names=range(_RawFileColumns.NUMBER_OF_COLUMNS),
-                                           index_col=False,
-                                           encoding='latin1')
+    # print(file_name)
+    try:
+        with open(file_name, 'rb') as f:
+            data: pd.DataFrame = __read_table(f, delimiter, 'utf8')
+    except:
+        with open(file_name, 'rb') as f:
+            data: pd.DataFrame = __read_table(f, delimiter, 'utf16')
 
     data: np.ndarray = data.fillna(DataArray.NO_ACTIVITY).values
     __convert_to_datetime(data)
+    __process_sensors(data)
     return __delete_unnecessary_columns(data)
+
+
+def __read_table(file: str, delimiter: str, encoding: str) -> pd.DataFrame:
+    return pd.read_table(file, delimiter=delimiter, header=None,
+                         names=range(_RawFileColumns.NUMBER_OF_COLUMNS),
+                         index_col=False,
+                         encoding=encoding)
 
 
 def __convert_to_datetime(data: np.ndarray):
@@ -95,8 +64,19 @@ def __convert_to_datetime(data: np.ndarray):
         try:
             datetime_object: datetime = datetime.strptime(date + ' ' + time[:8], '%Y-%m-%d %H:%M:%S')
         except:
-            datetime_object: datetime = datetime.strptime(date + ' ' + time[:8], '%Y-%m-%d %H.%M.%S')
+            try:
+                datetime_object: datetime = datetime.strptime(date + ' ' + time[:8], '%Y-%m-%d %H.%M.%S')
+            except:
+                try:
+                    datetime_object: datetime = datetime.strptime(date + ' ' + time[:5], '%Y-%m-%d %H:%M')
+                except:
+                    print(date, time)
+
         row[DataArray.DATETIME] = datetime_object
+
+
+def __process_sensors(data: np.ndarray):
+    data[:, _RawFileColumns.SENSOR] = [x.split()[0] for x in data[:, _RawFileColumns.SENSOR]]
 
 
 def __delete_unnecessary_columns(data: np.ndarray) -> np.ndarray:

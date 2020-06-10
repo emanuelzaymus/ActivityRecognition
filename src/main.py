@@ -5,14 +5,13 @@ import matplotlib.pyplot as plt
 import numpy as np
 from sklearn.preprocessing import StandardScaler
 
-from src import data_file_handling as fh, classifiers, feature_extraction as fex
+from src import classifiers, feature_extraction as fex
 from src.classifiers import SVM, classifier
 from src.classifiers.classifier import Preprocessing
 from src.datasets.Arbua import Aruba
-from src.datasets.Dataset import Dataset
 from src.datasets.Kyoto1 import Kyoto1
 from src.datasets.Kyoto2 import Kyoto2
-from src.testing import test_kyoto1, test_aruba, test_kyoto2, test_kyoto3
+from src.datasets.Kyoto3 import Kyoto3
 from src.testing.SvmTester import SvmTester
 
 
@@ -101,49 +100,20 @@ start_time = time.time()
 # classifier.PREPROCESSOR = Preprocessing.NOTHING
 classifier.PREPROCESSOR = Preprocessing.STANDARD_SCALER
 # classifier.PREPROCESSOR = Preprocessing.ROBUST_SCALER
-# test_kyoto1.test_variable_window_sizes(with_previous_class_feature=True)
-# test_kyoto1.test_c_gamma_parameters(37)
 
 
-# test_kyoto1.test_best_SVC(30, False)
+t: SvmTester = SvmTester(Kyoto1())
+t.test_default_svm(5)
 
-# test_kyoto3.test_default_SVC(30, False)
-# test_kyoto3.test_default_SVC(30, True)
+t: SvmTester = SvmTester(Kyoto2())
+t.test_default_svm(5)
 
-classifier.PREPROCESSOR = Preprocessing.STANDARD_SCALER
-# test_aruba.test_variable_window_sizes(what='asdf')
-# print('Execution time: %s s' % (time.time() - start_time))
+t: SvmTester = SvmTester(Kyoto3())
+t.test_default_svm(5)
 
 t: SvmTester = SvmTester(Aruba())
-# t.test_default_svm(5, False)
-t.test_variable_window_sizes()
+t.test_default_svm(5)
 
-# test_aruba.test_default_SVC(30, True)
-# print('Execution time: %s s' % (time.time() - start_time))
-#################
-
-
-#
-# classifier.PREPROCESSOR = Preprocessing.STANDARD_SCALER
-# test_kyoto2.test_variable_window_sizes(with_previous_class_feature=False, what="STANDART")
-# print('Execution time: %s s' % (time.time() - start_time))
-#
-# classifier.PREPROCESSOR = Preprocessing.ROBUST_SCALER
-# test_kyoto2.test_variable_window_sizes(with_previous_class_feature=False, what="ROBUST")
-# print('Execution time: %s s' % (time.time() - start_time))
-#
-# classifier.PREPROCESSOR = Preprocessing.NOTHING
-# test_kyoto2.test_variable_window_sizes(with_previous_class_feature=False, what="NO_SCALE")
-#
-# classifier.PREPROCESSOR = Preprocessing.STANDARD_SCALER
-# test_kyoto2.test_variable_window_sizes(with_previous_class_feature=True, what="PREVIOUS_CLASS-STANDART")
-# print('Execution time: %s s' % (time.time() - start_time))
-#
-# classifier.PREPROCESSOR = Preprocessing.ROBUST_SCALER
-# test_kyoto2.test_variable_window_sizes(with_previous_class_feature=True, what="PREVIOUS_CLASS-ROBUST")
-# print('Execution time: %s s' % (time.time() - start_time))
-#
-# classifier.PREPROCESSOR = Preprocessing.NOTHING
-# test_kyoto2.test_variable_window_sizes(with_previous_class_feature=True, what="PREVIOUS_CLASS-NO_SCALE")
+# t.test_variable_window_sizes()
 
 print('Execution time: %s s' % (time.time() - start_time))

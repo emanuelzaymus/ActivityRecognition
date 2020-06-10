@@ -1,8 +1,9 @@
-import src.feature_extraction as fex
 from typing import Tuple
-import src.data_file_handling as fh
+
 import numpy as np
 
+import src.data_file_handling as fh
+import src.feature_extraction as fex
 from src.datasets.Dataset import Dataset
 
 
@@ -16,13 +17,6 @@ class Aruba(Dataset):
                  'M011', 'M012', 'M013', 'M014', 'M015', 'M016', 'M017', 'M018', 'M019', 'M020', 'M021', 'M022', 'M023',
                  'M024', 'M025', 'M026', 'M027', 'M028', 'M029', 'M030', 'M031', 'T001', 'T002', 'T003', 'T004', 'T005']
 
-    def __get_data_array(self) -> np.ndarray:
-        return fh.get_data_array(self.__FILE)
-
-    @property
-    def file(self) -> str:
-        return self.__FILE
-
     def get_features(self, windows_size: int, with_previous_class_feature: bool = False) -> np.ndarray:
         return fex.extract_features(self.__get_data_array(), windows_size,
                                     with_previous_class_feature=with_previous_class_feature)[0]
@@ -34,3 +28,6 @@ class Aruba(Dataset):
         data_array: np.ndarray = self.__get_data_array()
         fex.fill_missing_activities(data_array)
         return [data_array], self.__SENSORS
+
+    def __get_data_array(self) -> np.ndarray:
+        return fh.get_data_array(self.__FILE)

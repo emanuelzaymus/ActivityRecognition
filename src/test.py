@@ -14,20 +14,26 @@ from src.datasets.Kyoto3 import Kyoto3
 import src.feature_extraction as fex
 import src.data_file_handling as fh
 
+# with open("data/kyoto3/p29/p29.t8.txt", 'rb') as f:
+# with open("data/kyoto3/p30/p30.t1.txt", 'rb') as f:
+#     data: pd.DataFrame = pd.read_table(f, header=None,
+#                                        names=range(_RawFileColumns.NUMBER_OF_COLUMNS),
+#                                        index_col=False,
+#                                        encoding='utf16')
+#
+#     print(data)
 
-def __get_features_activities(windows_size: int, with_previous_class_feature: bool = False) -> Tuple[
-    np.ndarray, np.ndarray]:
-    return fex.extract_features(__get_data_array(), windows_size,
-                                with_previous_class_feature=with_previous_class_feature)
+a = np.array([["asdf pop", 8], ["asdf pop", 8], ["asdf sdsdscs  ", 8], [")SD PLP", 54654], ["wer POPOPO", 9]])
+
+print(a)
+print(np.shape(a[:, 0]))
+
+# for i in range(np.shape(a[:, 0])[0]):
+#     a[i, 0] = a[i, 0].split()[0]
+
+a[:, 0] = [x.split()[0] for x in a[:, 0]]
+# a[i, 0] = a[i, 0].split()[0]
 
 
-def __get_data_array() -> np.ndarray:
-    return fh.get_data_array(Aruba().file)
-
-
-# a: np.ndarray = __get_features_activities(1)
-a: np.ndarray = __get_data_array()
-
-print(np.unique(a[:, 1]))
-for i in np.unique(a[:, 1]):
-    print("'" + i + "'" + ", ", end="")
+print(a[:, 0])
+print(a)
