@@ -7,6 +7,7 @@ from sklearn.model_selection import KFold
 from sklearn.svm import SVC
 
 import src.testing.TestParameters as Params
+from src.classifiers import PCA
 
 
 def __split_features(features: np.ndarray) -> Tuple[np.ndarray, np.ndarray]:
@@ -35,6 +36,8 @@ def __test(features: np.ndarray, clf, random_state: int, activities: np.ndarray 
         y_train, y_test = y[train_index], y[test_index]
 
         X_train, X_test = Params.PREPROCESSOR.preprocess(X_train, X_test)
+        X_train, X_test = PCA.decompose(X_train, X_test)
+
         clf.fit(X_train, y_train)
         predict = clf.predict(X_test)
 
