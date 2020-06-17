@@ -12,7 +12,7 @@ def decompose(X_train: np.ndarray, X_test: np.ndarray) -> Tuple[np.ndarray, np.n
         pca = PCA(Params.PCA_N_COMPONENTS)
         train_ = pca.fit_transform(X_train)
         test_ = pca.transform(X_test)
-        # print("n components:", pca.n_components_)
+        print("n components:", pca.n_components_)
         return train_, test_
 
     return X_train, X_test

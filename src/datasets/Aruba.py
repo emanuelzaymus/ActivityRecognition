@@ -9,10 +9,11 @@ from src.datasets.Dataset import Dataset
 
 class Aruba(Dataset):
     """ TODO Aruba comment """
-    __FILE = 'data/data_aruba_formatted_5days.txt'
+    # __FILE = 'data/data_aruba_formatted_5days.txt'
+    __FILE = 'data/data_aruba_formatted_2months.txt'
 
     __ACTIVITIES = ['Bed_to_Toilet', 'Eating', 'Enter_Home', 'Housekeeping', 'Leave_Home', 'Meal_Preparation', 'Relax',
-                    'Sleeping', 'Wash_Dishes', 'Work', 'Nothing']
+                    'Respirate', 'Sleeping', 'Wash_Dishes', 'Work', 'Nothing']
 
     __SENSORS = ['D001', 'D002', 'D004', 'M001', 'M002', 'M003', 'M004', 'M005', 'M006', 'M007', 'M008', 'M009', 'M010',
                  'M011', 'M012', 'M013', 'M014', 'M015', 'M016', 'M017', 'M018', 'M019', 'M020', 'M021', 'M022', 'M023',

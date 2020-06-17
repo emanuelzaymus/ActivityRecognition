@@ -3,7 +3,7 @@ from typing import Tuple
 
 import numpy as np
 from sklearn.metrics import accuracy_score
-from sklearn.model_selection import KFold
+from sklearn.model_selection import KFold, train_test_split
 from sklearn.svm import SVC
 
 import src.testing.TestParameters as Params
@@ -30,21 +30,27 @@ def __test(features: np.ndarray, clf, random_state: int, activities: np.ndarray 
     X, y = __split_features(features)
     scores = []
 
-    kf = KFold(n_splits=5, shuffle=True, random_state=random_state)
-    for train_index, test_index in kf.split(X):
-        X_train, X_test = X[train_index], X[test_index]
-        y_train, y_test = y[train_index], y[test_index]
+    # kf = KFold(n_splits=5, shuffle=True, random_state=random_state)
+    # for train_index, test_index in kf.split(X):
+    #     X_train, X_test = X[train_index], X[test_index]
+    #     y_train, y_test = y[train_index], y[test_index]
 
-        X_train, X_test = Params.PREPROCESSOR.preprocess(X_train, X_test)
-        X_train, X_test = PCA.decompose(X_train, X_test)
+    X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=random_state)
+    print("splitted")
 
-        clf.fit(X_train, y_train)
-        predict = clf.predict(X_test)
+    X_train, X_test = Params.PREPROCESSOR.preprocess(X_train, X_test)
+    print("scaled")
+    X_train, X_test = PCA.decompose(X_train, X_test)
 
-        # print("Report:\n", classification_report(y_test, predict))  # , target_names=activities))
-        # print("Confusion matrix:\n", confusion_matrix(y_test, predict), end="\n\n")
-        acc_score = accuracy_score(y_test, predict)
-        scores.append(acc_score)
+    clf.fit(X_train, y_train)
+    print("trained")
+    predict = clf.predict(X_test)
+    print("tested")
+
+    # print("Report:\n", classification_report(y_test, predict))  # , target_names=activities))
+    # print("Confusion matrix:\n", confusion_matrix(y_test, predict), end="\n\n")
+    acc_score = accuracy_score(y_test, predict)
+    scores.append(acc_score)
 
     return statistics.mean(scores) * 100
 
