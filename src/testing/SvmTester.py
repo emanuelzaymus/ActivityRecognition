@@ -1,6 +1,4 @@
-from typing import List
-
-import src.testing.TestParameters as Params
+import src.testing.SvmParameters as Params
 from src.classifiers import SVM
 from src.datasets.Dataset import Dataset
 
@@ -16,51 +14,29 @@ class SvmTester:
             return self.save_to_file + s + (str(n) if n is not None else '') + ".txt"
         return None
 
-    def test_default_svm(self, windows_size: int = Params.WINDOW_SIZE,
-                         with_previous_class_feature: bool = Params.WITH_PREVIOUS_CLASS_FEATURE):
-        features = self.dataset.get_features(windows_size, with_previous_class_feature)
-        print(SVM.test_default_svm(features, with_previous_class_feature=with_previous_class_feature))
+    def test_default_svm(self):
+        features = self.dataset.get_features(Params.WINDOW_SIZE)
+        print(SVM.test_default_svm(features, self.dataset.get_activities(), Params.KERNEL))
 
-    def test_variable_window_sizes(self, window_sizes: List[int] = None, file_name: str = "window_size_testing",
-                                   with_previous_class_feature: bool = False, with_time_duration: bool = False):
-        if window_sizes is None:
-            window_sizes = Params.WINDOW_SIZES
+    def test_variable_window_sizes(self, new_file_name: str = "window_size_testing"):
         data_arrays, sensors = self.dataset.get_data_arrays()
-        f_name = self.__get_f_name(file_name)
-        SVM.test_variable_window_sizes(data_arrays, sensors, window_sizes, with_previous_class_feature, f_name,
-                                       with_time_duration)
+        f_name = self.__get_f_name(new_file_name)
+        SVM.test_variable_window_sizes(data_arrays, sensors, Params.WINDOW_SIZES, f_name, Params.WITH_TIME_DURATION)
 
-    def test_kernels(self, windows_size: int = Params.WINDOW_SIZE):
-        features = self.dataset.get_features(windows_size)
-        SVM.test_kernels(features, self.__get_f_name("kernel_testing_ws", windows_size))
+    def test_kernels(self, new_file_name: str = "kernel_testing_ws"):
+        features = self.dataset.get_features(Params.WINDOW_SIZE)
+        SVM.test_kernels(features, self.__get_f_name(new_file_name, Params.WINDOW_SIZE))
 
-    def test_rbf_c_gamma_default_parameters(self, windows_size: int = Params.WINDOW_SIZE):
-        features = self.dataset.get_features(windows_size)
-        SVM.test_rbf_c_gamma_default_parameters(features, self.__get_f_name("c_gamma_default_testing_ws", windows_size))
+    def test_kernel_c_gamma_parameters(self, new_file_name: str = "kernel_c_gamma_testing_ws"):
+        features = self.dataset.get_features(Params.WINDOW_SIZE)
+        SVM.test_kernel_c_gamma_parameters(features, Params.KERNEL, Params.C_REGULATIONS, Params.GAMMAS,
+                                           self.__get_f_name(new_file_name, Params.WINDOW_SIZE),
+                                           Params.WITH_TIME_DURATION)
 
-    def test_rbf_c_gamma_parameters(self, windows_size: int = Params.WINDOW_SIZE, with_time_duration: bool = False):
-        features = self.dataset.get_features(windows_size)
-        SVM.test_rbf_c_gamma_parameters(features, self.__get_f_name("rbf_c_gamma_testing_ws", windows_size),
-                                        with_time_duration=with_time_duration)
+    def test_pca(self, new_file_name: str = "pca_testing_ws"):
+        features = self.dataset.get_features(Params.WINDOW_SIZE)
+        SVM.test_pca(features, Params.PCA_N_COMPONENTS_LIST, self.__get_f_name(new_file_name, Params.WINDOW_SIZE))
 
-    def test_best_svm(self, windows_size: int = Params.WINDOW_SIZE,
-                      with_previous_class_feature: bool = Params.WITH_PREVIOUS_CLASS_FEATURE):
-        features = self.dataset.get_features(windows_size, with_previous_class_feature)
-        print("got features")
-        SVM.test_best_svm(features, self.dataset.get_activities(),
-                          with_previous_class_feature=with_previous_class_feature)
-
-    def test_poly_defaults(self, windows_size: int = Params.WINDOW_SIZE,
-                           with_previous_class_feature: bool = Params.WITH_PREVIOUS_CLASS_FEATURE):
-        features = self.dataset.get_features(windows_size, with_previous_class_feature)
-        SVM.test_poly_defaults(features, self.dataset.get_activities(),
-                               with_previous_class_feature=with_previous_class_feature)
-
-    def test_poly_c_gamma_parameters(self, windows_size: int = Params.WINDOW_SIZE, with_time_duration: bool = False):
-        features = self.dataset.get_features(windows_size)
-        SVM.test_poly_c_gamma_parameters(features, self.__get_f_name("poly_c_gamma_testing_ws", windows_size),
-                                         with_time_duration=with_time_duration)
-
-    def test_pca(self, windows_size: int = Params.WINDOW_SIZE):
-        features = self.dataset.get_features(windows_size)
-        SVM.test_pca(features, self.__get_f_name("pca_testing_ws", windows_size))
+    def test_best_svm(self):
+        features = self.dataset.get_features(Params.WINDOW_SIZE)
+        SVM.test_best_svm(features, self.dataset.get_activities(), Params.KERNEL, Params.C, Params.GAMMA)

@@ -1,6 +1,6 @@
 from typing import List
 
-from src.datasets.KyotoBase import KyotoBase
+from src.datasets.kyoto.KyotoBase import KyotoBase
 
 
 class Kyoto2(KyotoBase):

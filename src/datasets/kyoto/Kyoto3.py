@@ -15,13 +15,8 @@ class Kyoto3(Dataset):
     __ACTIVITIES = ['Fill_medication_dispenser', 'Watch_DVD', 'Water_plants', 'Answer_the_phone',
                     'Prepare_birthday_card', 'Prepare_soup', 'Clean', 'Choose_outfit']
 
-    # no .interwoven file: 'p22/p22'  # no .t1 file: 'p27/p27'
-    # __FILES = ['p04/p04', 'p13/p13', 'p14/p14', 'p15/p15', 'p17/p17', 'p18/p18', 'p19/p19', 'p20/p20', 'p23/p23',
-    #            'p24/p24', 'p25/p25', 'p26/p26', 'p27/p27', 'p28/p28', 'p29/p29', 'p30/p30', 'p31/p31', 'p32/p32',
-    #            'p33/p33', 'p34/p34']
     __EXTENSIONS = ['.t1', '.t2', '.t3', '.t4', '.t5', '.t6', '.t7', '.t8']
     __TXT_EXTENSIONS = ['.t1.txt', '.t2.txt', '.t3.txt', '.t4.txt', '.t5.txt', '.t6.txt', '.t7.txt', '.t8.txt']
-    # __INTERWOVEN = ['.interwoven']
     __EXTENSIONS_ACTIVITIES = [1, 2, 3, 4, 5, 6, 7, 8]
 
     __SENSORS = ['AD1-B', 'AD1-C', 'D07', 'D08', 'D09', 'D10', 'D11', 'D12', 'E01', 'I01', 'I02', 'I03', 'I04', 'I05',

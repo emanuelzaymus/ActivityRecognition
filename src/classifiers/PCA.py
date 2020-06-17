@@ -3,7 +3,7 @@ from typing import Tuple
 import numpy as np
 from sklearn.decomposition import PCA
 
-import src.testing.TestParameters as Params
+import src.testing.SvmParameters as Params
 
 
 # noinspection PyPep8Naming
