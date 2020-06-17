@@ -17,6 +17,9 @@ class Dataset:
     @abstractmethod
     def get_data_arrays(self) -> Tuple[List[np.ndarray], List[str]]:
         """
-        TODO: comment -> also with return values explanation
+        Returns:
+             data_arrays: If the dataset is divided in more files in multiple directories, this method loads the data into more numpy arrays based on the directories
+
+             sensors: Sensors of the dataset
         """
         pass

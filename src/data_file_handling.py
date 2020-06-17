@@ -26,7 +26,7 @@ def get_data_array(file_name: str, delimiter: str = None) -> np.ndarray:
             - SENSOR - name of the sensor
             - VALUE - value of the sensor - is ignored
             - ACTIVITY - optional, in format: *activity_name* *begin/start/end*
-        **Returned Numpy array in format: [[datetime.datetime SENSOR ACTIVITY]...]**
+        **Returned Numpy array in format: [[datetime.datetime SENSOR ACTIVITY] ... ]**
             - datetime.datetime - created from DATE and TIME
             - SENSOR - name of the sensor, unchanged
             - ACTIVITY - empty activities are replaced by ``DataArray.NO_ACTIVITY``

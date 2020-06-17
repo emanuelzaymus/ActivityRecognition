@@ -4,8 +4,9 @@ from src.datasets.aruba.ArubaBase import ArubaBase
 
 
 class Aruba2Months(ArubaBase):
-    """ TODO Aruba 2 months comment """
-
+    """
+        2 months (456 285 sensor events) from dataset **Daily Life 2010-2011** (17 Aruba) from http://casas.wsu.edu/datasets/
+    """
     __FILE = 'data/data_aruba_formatted_2months.txt'
 
     __ACTIVITIES = ['Bed_to_Toilet', 'Eating', 'Enter_Home', 'Housekeeping', 'Leave_Home', 'Meal_Preparation', 'Relax',

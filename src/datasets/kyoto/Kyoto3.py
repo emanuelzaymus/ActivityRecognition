@@ -10,7 +10,8 @@ from src.datasets.Dataset import Dataset
 
 
 class Kyoto3(Dataset):
-    """ TODO Kyoto3 comment """
+    """ Dataset **ADL Interweaved Activities** (3 Kyoto) from http://casas.wsu.edu/datasets/ """
+
     __DIRECTORY = 'data/kyoto3'
     __ACTIVITIES = ['Fill_medication_dispenser', 'Watch_DVD', 'Water_plants', 'Answer_the_phone',
                     'Prepare_birthday_card', 'Prepare_soup', 'Clean', 'Choose_outfit']

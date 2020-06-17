@@ -9,7 +9,6 @@ from src.datasets.Dataset import Dataset
 
 
 class ArubaBase(Dataset):
-    """ TODO Aruba comment """
 
     def get_features(self, windows_size: int, with_previous_class_feature: bool = False) -> np.ndarray:
         return fex.extract_features(self.__get_data_array(), windows_size,

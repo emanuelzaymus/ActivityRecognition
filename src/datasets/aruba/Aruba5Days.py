@@ -4,8 +4,9 @@ from src.datasets.aruba.ArubaBase import ArubaBase
 
 
 class Aruba5Days(ArubaBase):
-    """ TODO Aruba 5 days comment """
-
+    """
+        5 days (35 624 sensor events) from dataset **Daily Life 2010-2011** (17 Aruba) from http://casas.wsu.edu/datasets/
+    """
     __FILE = 'data/data_aruba_formatted_5days.txt'
 
     __ACTIVITIES = ['Bed_to_Toilet', 'Eating', 'Enter_Home', 'Housekeeping', 'Leave_Home', 'Meal_Preparation', 'Relax',

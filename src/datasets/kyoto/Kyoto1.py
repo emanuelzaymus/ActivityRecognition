@@ -4,7 +4,8 @@ from src.datasets.kyoto.KyotoBase import KyotoBase
 
 
 class Kyoto1(KyotoBase):
-    """ TODO Kyoto1 comment """
+    """ Dataset **ADL Normal Activities** (1 Kyoto) from http://casas.wsu.edu/datasets/ """
+
     __DIRECTORY = 'data/kyoto1'
     __ACTIVITIES = ['Phone_Call', 'Wash_hands', 'Cook', 'Eat', 'Clean']
 

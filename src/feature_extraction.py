@@ -6,14 +6,34 @@ from sklearn.preprocessing import OneHotEncoder
 
 from src.DataArray import DataArray
 
-# 4 for features: SECONDS FROM MIDNIGHT - FIRST RECORD, SECONDS FROM MIDNIGHT - LAST RECORD, DAY OF THE WEEK,
-# SECONDS ELAPSED
+# 4 features:
+# SECONDS FROM MIDNIGHT OF THE FIRST RECORD, SECONDS FROM MIDNIGHT OF THE LAST RECORD, DAY OF THE WEEK, SECONDS ELAPSED
 ANOTHER_FEATURES_COUNT = 4
 
 
 def extract_features_from_arrays(data_arrays: List[np.ndarray], window_size: int, sensors: List[str] = None,
                                  with_previous_class_feature: bool = False) -> np.ndarray:
-    """ TODO: comment """
+    """
+        Extracts feature vectors from ``data_arrays`` based on windowing with ``window_size``.
+
+        Features:
+            - SECONDS FROM MIDNIGHT OF THE FIRST RECORD in the window
+            - SECONDS FROM MIDNIGHT OF THE LAST RECORD in the window
+            - DAY OF THE WEEK - MON..SUN => 1..7 (of the last record in the window) - BINARY FEATURE
+            - SECONDS ELAPSED between the last and the first record of the window
+            - SIMPLE COUNTS OF THE SENSORS
+
+            - Last - CLASS of the feature vector - index of the activity (of the last record of the window)
+
+        :param data_arrays: List of numpy arrays in format [[datetime.datetime  SENSOR  ACTIVITY] ... ]
+                -> result of abstract method Dataset.get_data_arrays()[0]
+        :param window_size: Size of the window
+        :param sensors: Names of sensors (optional)
+        :param with_previous_class_feature: (optional)
+
+        Returns:
+            features: Feature vectors with class of the feature vector - last element of the vector
+    """
     result_data_array = None
 
     data_arr: np.ndarray
@@ -40,23 +60,26 @@ def extract_features(data_array: np.ndarray, window_size: int, all_samples_label
         Extracts feature vectors from ``data_array`` based on windowing with ``window_size``.
 
         Features:
-            - 1st - SECONDS FROM MIDNIGHT (of the first record in the window)
-            - 2nd - DAY OF THE WEEK - MON..SUN => 1..7 (of the last record in the window)
-            - 3rd - SECONDS ELAPSED (between the last and the first record of the window)
-            - ... - SIMPLE COUNTS OF THE SENSORS
+            - SECONDS FROM MIDNIGHT OF THE FIRST RECORD in the window
+            - SECONDS FROM MIDNIGHT OF THE LAST RECORD in the window
+            - DAY OF THE WEEK - MON..SUN => 1..7 (of the last record in the window) - BINARY FEATURE
+            - SECONDS ELAPSED between the last and the first record of the window
+            - SIMPLE COUNTS OF THE SENSORS
+
             - Last - CLASS of the feature vector - index of the activity (of the last record of the window)
 
         :param data_array: Numpy array in format [[datetime.datetime  SENSOR  ACTIVITY] ... ]
-                -> result of data_file_handling.get_data_array(file_name)
+                -> result of data_file_handling.get_data_array(file_name, delimiter)
         :param window_size: Size of the window
-        :param all_samples_labeled: If all samples are labeled with its numerical value of activity.
-        :param sensors: Names of sensors (optional).
-        :param with_previous_class_feature:
-    Returns:
-        features : ndarray
-            Feature vectors with class of the feature vector - last element of the vector
-        activities : ndarray
-            Used activities in its order (indices of the activities are theirs positions in the array)
+        :param all_samples_labeled: Whether all samples are labeled with its numerical value of activity (optional)
+        :param sensors: Names of sensors (optional)
+        :param with_previous_class_feature: (optional)
+        :param encode_categorical_feature: Whether to encode categorical feature DAY OF THE WEEK (optional)
+
+        Returns:
+            features: Feature vectors with class of the feature vector - last element of the vector
+
+            activities: Used activities in its order (indices of the activities are theirs positions in the array)
     """
     data: np.ndarray = data_array.copy()
     activities: np.ndarray = fill_missing_activities(data) if not all_samples_labeled else None
@@ -127,7 +150,7 @@ def fill_missing_activities(data_array: np.ndarray) -> np.ndarray:
     Fills and replaces ACTIVITY values with NUMBER (index) OF THE ACTIVITY in the parameter ``data_array``.
 
     Returns:
-        ndarray: Used activities in its order
+        Used activities in its order
     """
     all_activities: np.ndarray = __get_activities(data_array)
     last_activities_stack = []

@@ -8,7 +8,7 @@ from src.testing.SvmTester import SvmTester
 
 start_time = time.time()
 
-t = SvmTester(Aruba5Days())
+t = SvmTester(Kyoto1())
 t.test_best_svm()
 
 print('Execution time: %s s' % (time.time() - start_time))

@@ -4,7 +4,7 @@ from src.classifiers.Kernel import Kernel
 from src.classifiers.Preprocessing import Preprocessing
 
 """ 
-TODO: comment for Parameters
+    Parameters for testing SVMs - SvmTester.py
 """
 
 # Randomize
